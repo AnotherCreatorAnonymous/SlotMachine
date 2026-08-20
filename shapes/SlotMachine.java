@@ -8,7 +8,11 @@
 public class SlotMachine
 {
     // instance variables - replace the example below with your own
-    private int x;
+    private int pos;
+    private String color;
+    private String symbol;
+    private int wheel;
+    private boolean isOK;
 
     /**
      * Constructor for objects of class SlotMachine
@@ -16,7 +20,7 @@ public class SlotMachine
     public SlotMachine()
     {
         // initialise instance variables
-        x = 0;
+        pos = 0;
     }
 
     /**
