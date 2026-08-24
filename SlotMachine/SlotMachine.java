@@ -152,9 +152,11 @@ public class SlotMachine
      *  Retorna los colores de los simbolos visibles en todas las ruedas de la maquina ordenados de izquierda a derecha
      */
     public String configuration(){
-        /* BORRAR DESPUES: consultar el simbolo visible de cada rueda y
-         * retornar sus colores ordenados de izquierda a derecha. */
-        return "Hola";
+        String[] config = new String[wheels.size()];
+        for (int i = 0; i < wheels.size(); i++) {
+            config[i] = wheels.get(i).currentColor();
+        }
+        return config;
     }
     
     /**
@@ -171,36 +173,46 @@ public class SlotMachine
      *  Hace visible la maquina, si ya es visible no hace nada
      */
     public void makeVisible(){
-        /* BORRAR DESPUES: marcar la maquina como visible y hacer visibles
-         * todas sus ruedas y simbolos mediante los componentes de shapes. */
+        if (visible) return;
+        visible = true;
+        redraw();
+        succeed();
     }
     
     /**
      *  Hace invisible la maquina, si ya es invisible no hace nada
      */
     public void makeInvisible(){
-        /* BORRAR DESPUES: ocultar todas las figuras de la maquina y evitar
-         * mostrar JOptionPane mientras la maquina este invisible. */
+        if (!visible) return;
+        for (Wheel w : wheels) {
+            w.hide();
+        }
+        visible = false;
+        succeed();
     }
     
+    // Mini-ciclo 7
+
     /**
      *  Cierra el simulador
      */
     public void exit(){
-        /* BORRAR DESPUES: ocultar y liberar la representacion grafica de la
-         * maquina, dejando registrado en isOK si el cierre fue exitoso. */
+        for (Wheel w : wheels) {
+            w.hide();
+        }
+        visible = false;
+        isOK = true;
     }
+
     
     /**
      *  Indica si la ultima operacion se realizo correctamente
      */
     public boolean ok(){
-        /* BORRAR DESPUES: retornar el valor de isOK, que debe representar
-         * exclusivamente el resultado de la ultima operacion solicitada. */
         return isOK;
     }
 
-    //helpers privados para los metodos publicos funcionen correctamente y para no repetir codigo
+    //helpers privados para los metodos publicos funcionen correctamente y para no repetir codigo y Mini-ciclo 6
     private int clamp(int pos, int max){
         if (pos < 1) return 1;
         if (pos > max) return max;
@@ -216,6 +228,20 @@ public class SlotMachine
         isOK = false;
         if (visible) {
             JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    /**
+     *  Redibuja la maquina en su estado actual
+     */
+    private void redraw(){
+        if (!visible) return;
+        int size = isJackpot() ? JACKPOT_SIZE : NORMAL_SIZE;
+        int x = START_X;
+        for (Wheel w : wheels) {
+            w.showAt(x, Y, size);
+            x += SPACING;
         }
     }
 }

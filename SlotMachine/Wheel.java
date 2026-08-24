@@ -84,4 +84,37 @@ public class Wheel {
     public String currentColor() {
         return symbols.isEmpty() ? null : symbols.get(current).getColor();
     }
+
+
+    /**
+     * Hace que todos los simbolos de la rueda sean invisibles.
+     */
+    public void hide() {
+        for (Symbol s : symbols) {
+            s.makeInvisible();
+        }
+    }
+
+
+    //  MC5
+
+    /**
+     * Muestra el simbolo visible de la rueda en una posicion y tamaño especificos.
+     *
+     * @param x    posicion horizontal.
+     * @param y    posicion vertical.
+     * @param size diametro del simbolo.
+     */
+    public void showAt(int x, int y, int size) {
+        for (Symbol s : symbols) {
+            s.makeInvisible();
+        }
+        if (!symbols.isEmpty()) {
+            Symbol s = symbols.get(current);
+            s.changeSize(size);
+            s.moveTo(x, y);
+            s.makeVisible();
+        }
+    }
 }
+

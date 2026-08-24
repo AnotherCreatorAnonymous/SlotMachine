@@ -75,4 +75,13 @@ public class Symbol {
     public boolean hasColor(String color) {
         return this.color.equals(color);
     }
+
+    /**
+     * Cambia el tamaño del simbolo.
+     *
+     * @param diameter nuevo diametro del simbolo.
+     */
+    public void changeSize(int diameter) {
+        shape.changeSize(diameter);
+    }
 }
