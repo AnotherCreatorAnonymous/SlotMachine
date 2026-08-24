@@ -1,0 +1,70 @@
+-- Retrospectiva Entrega ciclo 1
+-- Alejandro Ospina y Carlos Jimenez
+
+1. ¿Cuáles fueron los mini-ciclos definidos? Justifíquenlos.
+    - usamos 7 mini-ciclos para este ciclo fueron:
+        -MC1: SlotMachine(), addWheel, delWheel con la lista de ruedas funcionando (sin gráficos).
+Justificación: es la base, para el resto del proyecto.
+
+        -MC2:addSymbol, delSymbol, placeSymbol.
+Justificación: empezar a formar el detras de lo visual de las ruedas/monedas.
+
+
+        -MC3:spin(wheel), spin().
+Justificación: ya se puede "jugar" aunque sea sin visual.
+
+
+        -MC4:symbols(), distinctSymbols(), configuration(), isJackpot().
+Justificación: consultas sobre el estado ya construido.
+
+
+        -MC5:makeVisible(), makeInvisible(), integrando shapes para dibujar ruedas/símbolos.
+Justificación: ahora sí entra la parte visual.
+
+
+        -MC6:ok() + manejo de errores + JOptionPane (solo si visible).
+Justificación: requisito de usabilidad 4.
+
+
+        -MC7:exit() + revisión de extensibilidad.
+Justificación: cierre y refactor final.
+
+2. ¿Cuál es el estado actual del proyecto en términos de mini-ciclos? ¿por qué?
+    - El estado actual del proyecto en términos de mini-ciclos es la mayoria completos, 
+    faltaron agregar unos métodos que nos hizo falta en MC3 y 4 que no entendíamos bien la lógica.
+
+3. ¿Cuál fue el tiempo total invertido por cada uno de ustedes? (Horas/Hombre)
+    - Jimenéz hizo 12 Horas
+    - Ospina hizo 10 Horas
+
+4. ¿Cuál consideran fue el mayor logro? ¿Por qué?
+    - El mayor logro para esta entrega fue el tema de la usabilidad y el miniciclo 2
+     ya que conllevo mucha lógica para entender como tenía que funcionar la maquina, 
+     además que se utilizaron los helpers privados dentro de clases para facilitar esto
+
+5. ¿Cuál consideran que fue el mayor problema técnico? ¿Qué hicieron para resolverlo?
+    - EL mayor problema técnico fue el hehco de hacer girar la rueda, no tuvimos contemplado desde el principio,
+    lo resolvimos creando dos métodos distintos que uno gira la rueda por completo y el otro solo una de las ruedas.
+
+6. ¿Qué hicieron bien como equipo? ¿Qué se comprometen a hacer para mejorar los resultados?
+    - lo que hicimos bien como equipo fue la comunicación, estuvimos siempre al tanto de todo, 
+    para poder hacer un buen entregable, nos comprometemos a usar herramientas para mejor manejo del tiempo.
+
+7. Considerando las prácticas XP incluidas en los laboratorios. ¿cuál fue la más útil? ¿por qué?
+    - la práctica xp que consideremaos util fue pair programming, ya que esta se basa en estar programando al mismo tiempo
+    y siempre tener ideas frescas y la correción de errores al momento.
+
+8. ¿Qué referencias usaron? ¿Cuál fue la más útil? Incluyan citas con estándares adecuados.
+
+Barnes, D. J., & Kölling, M. (2002). Objects first with Java: A practical
+introduction using BlueJ. Pearson Education. (Base del paquete "shapes"
+reutilizado en el proyecto: Circle, Canvas.)
+
+Oracle. (s.f.). JOptionPane (Java Platform SE documentation).
+Oracle Corporation. https://docs.oracle.com/javase/8/docs/api/javax/swing/JOptionPane.html
+(Consultada para implementar el manejo de errores del requisito de usabilidad 4.)
+
+Anthropic. (2026). Claude (Sonnet 5) [Modelo de lenguaje de gran escala].
+https://claude.ai
+(Consultado como asistente de programación para dudas puntuales de sintaxis
+de Java.)
