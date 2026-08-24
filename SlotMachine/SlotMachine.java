@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 /**
  * Simula una maquina tragamonedas compuesta por una o mas ruedas.
  * Cada rueda contiene simbolos identificados por colores CSS.
@@ -9,18 +10,26 @@ import java.util.List;
  */
 public class SlotMachine
 {
-    // instance variables - replace the example below with your own
-    private List<Wheel> wheels;
+ // === MC1 ===
+    private static final int START_X = 50;
+    private static final int Y = 100;
+    private static final int SPACING = 80;
+    private static final int NORMAL_SIZE = 30;
+    private static final int JACKPOT_SIZE = 50;
+
+    private ArrayList<Wheel> wheels;
     private boolean isOK;
+    private boolean visible;
 
     /**
      * Construye una maquina tragamonedas sin ruedas y en estado correcto.
      */
-    public SlotMachine()
-    {
-        // initialise instance variables
-        wheels = new ArrayList<Wheel>();
+    public SlotMachine(){
+
         isOK = true;
+        visible = false;
+        wheels = new ArrayList<Wheel>();
+
     }
 
     /**
@@ -29,21 +38,9 @@ public class SlotMachine
      * @param pos indica la posicion de la rueda
      */
     public void addWheel(int pos){
-        /* BORRAR DESPUES: validar y normalizar pos; crear una rueda nueva,
-         * insertarla en wheels en la posicion indicada y actualizar isOK. */
-        if ( pos < 1 ){
-            wheels.add(new Wheel());
-            isOK = true;
-        }
-        else if ( pos > wheels.size() ){
-            wheels.add(new Wheel());
-            isOK = true;
-        }
-        else {
-            wheels.add(pos - 1, new Wheel());
-            isOK = true;
-        }
-        
+        int p = clamp(pos, wheels.size() + 1);
+        wheels.add(p - 1, new Wheel());
+        succeed();
     }
     
     /**
@@ -52,15 +49,13 @@ public class SlotMachine
      *  @param pos indica la posicion de la rueda a eliminar
      */
     public void delWheel(int pos){
-        /* BORRAR DESPUES: validar que exista una rueda en pos; eliminarla,
-         * actualizar la representacion grafica y registrar el resultado en isOK. */
-        if ( pos < 1 || pos > wheels.size() ){
-            isOK = false;
+        if (wheels.isEmpty()) {
+            fail("No hay ruedas para eliminar.");
+            return;
         }
-        else {
-        wheels.remove(pos - 1);
-        isOK = true;
-        }
+        int p = clamp(pos, wheels.size());
+        wheels.remove(p - 1);
+        succeed();
     }
     
     /**
@@ -181,6 +176,25 @@ public class SlotMachine
         /* BORRAR DESPUES: retornar el valor de isOK, que debe representar
          * exclusivamente el resultado de la ultima operacion solicitada. */
         return isOK;
+    }
+
+    //helpers privados para los metodos publicos funcionen correctamente y para no repetir codigo
+    private int clamp(int pos, int max){
+        if (pos < 1) return 1;
+        if (pos > max) return max;
+        return pos;
+    }
+
+    private void succeed(){
+        isOK = true;
+        //redraw();
+    }
+
+    private void fail(String message){
+        isOK = false;
+        if (visible) {
+            JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
 
