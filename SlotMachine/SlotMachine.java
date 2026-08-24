@@ -150,7 +150,7 @@ public class SlotMachine
     /**
      *  Retorna los colores de los simbolos visibles en todas las ruedas de la maquina ordenados de izquierda a derecha
      */
-    public String configuration(){
+    public String[] configuration(){
         String[] config = new String[wheels.size()];
         for (int i = 0; i < wheels.size(); i++) {
             config[i] = wheels.get(i).currentColor();
