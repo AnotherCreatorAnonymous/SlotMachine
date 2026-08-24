@@ -19,6 +19,9 @@ bluej.pkh
 
 # BlueJ files
 
+# Astah files
+*.astah.lock
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
