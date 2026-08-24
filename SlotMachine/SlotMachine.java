@@ -111,31 +111,60 @@ public class SlotMachine
         }
     }
     
+    // MC3
+
     /**
      *  Gira la rueda especificada
      *  
      *  @param wheel indica la rueda a girar
      */
     public void spin(int wheel){
-        /* BORRAR DESPUES: validar la rueda; desplazar aleatoriamente su
-         * posicion visible, animar el giro con shapes y actualizar isOK. */
+         if (wheels.isEmpty()) {
+            fail("No hay ruedas en la maquina.");
+            return;
+        }
+        int p = clamp(wheel, wheels.size());
+        Wheel w = wheels.get(p - 1);
+        if (w.isEmpty()) {
+            fail("La rueda indicada no tiene simbolos.");
+            return;
+        }
+        w.spin();
+        succeed();
     }
     
     /**
      *  Gira todas las ruedas
      */
     public void spin(){
-        /* BORRAR DESPUES: girar todas las ruedas, conservar una operacion
-         * consistente para la maquina completa y actualizar su apariencia. */
+        if (wheels.isEmpty()) {
+            fail("No hay ruedas en la maquina.");
+            return;
+        }
+        boolean any = false;
+        for (Wheel w : wheels) {
+            if (!w.isEmpty()) {
+                w.spin();
+                any = true;
+            }
+        }
+        if (any) {
+            succeed();
+        } else {
+            fail("Ninguna rueda tiene simbolos para girar.");
+        }
     }
+
+    // MC4
     
     /**
      *  Retorna los colores de los simbolos en el orden en el que estan iniciando por el 1
      */
-    public String symbols(){
-        /* BORRAR DESPUES: consultar la primera rueda y retornar sus colores
-         * en el orden de la rueda, comenzando por la posicion 1. */
-        return "hola";
+    public String[] symbols(){
+        if (wheels.isEmpty()) {
+            return new String[0];
+        }
+        return wheels.get(0).allColors();
     }
 
     /**
