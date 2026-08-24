@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 /**
  * Representa una rueda con una secuencia de simbolos identificados por color.
  * La rueda tambien debe conservar cual simbolo se encuentra visible.
@@ -95,6 +96,33 @@ public class Wheel {
         }
     }
 
+    
+    //  MC3 
+
+    /**
+     * Hace girar la rueda y cambia el simbolo visible a uno aleatorio.
+     */
+    public void spin() {
+        if (symbols.isEmpty()) {
+            return;
+        }
+        current = new Random().nextInt(symbols.size());
+    }
+
+    //  MC4
+
+    /**
+     * Retorna los colores de todos los simbolos de la rueda.
+     *
+     * @return arreglo con los colores de los simbolos.
+     */
+    public String[] allColors() {
+        String[] result = new String[symbols.size()];
+        for (int i = 0; i < symbols.size(); i++) {
+            result[i] = symbols.get(i).getColor();
+        }
+        return result;
+    }
 
     //  MC5
 
