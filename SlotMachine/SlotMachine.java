@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Simula una maquina tragamonedas compuesta por una o mas ruedas.
@@ -9,7 +10,7 @@ import java.util.List;
 public class SlotMachine
 {
     // instance variables - replace the example below with your own
-    private ArrayList<Wheel> wheels;
+    private List<Wheel> wheels;
     private boolean isOK;
 
     /**
@@ -18,8 +19,8 @@ public class SlotMachine
     public SlotMachine()
     {
         // initialise instance variables
-        isOK = true;
         wheels = new ArrayList<Wheel>();
+        isOK = true;
     }
 
     /**
@@ -30,6 +31,19 @@ public class SlotMachine
     public void addWheel(int pos){
         /* BORRAR DESPUES: validar y normalizar pos; crear una rueda nueva,
          * insertarla en wheels en la posicion indicada y actualizar isOK. */
+        if ( pos < 1 ){
+            wheels.add(new Wheel());
+            isOK = true;
+        }
+        else if ( pos > wheels.size() ){
+            wheels.add(new Wheel());
+            isOK = true;
+        }
+        else {
+            wheels.add(pos - 1, new Wheel());
+            isOK = true;
+        }
+        
     }
     
     /**
@@ -40,6 +54,13 @@ public class SlotMachine
     public void delWheel(int pos){
         /* BORRAR DESPUES: validar que exista una rueda en pos; eliminarla,
          * actualizar la representacion grafica y registrar el resultado en isOK. */
+        if ( pos < 1 || pos > wheels.size() ){
+            isOK = false;
+        }
+        else {
+        wheels.remove(pos - 1);
+        isOK = true;
+        }
     }
     
     /**
@@ -159,7 +180,7 @@ public class SlotMachine
     public boolean ok(){
         /* BORRAR DESPUES: retornar el valor de isOK, que debe representar
          * exclusivamente el resultado de la ultima operacion solicitada. */
-        return true;
+        return isOK;
     }
 }
 
