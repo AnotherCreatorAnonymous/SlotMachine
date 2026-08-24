@@ -9,13 +9,16 @@ import java.util.List;
  */
 public class Wheel {
 
+    //  MC1 
     private List<Symbol> symbols;
+    private int current;
 
     /**
      * Construye una rueda sin simbolos y con una posicion visible inicial.
      */
     public Wheel() {
         symbols = new ArrayList<>();
+        current = 0;
     }
 
     /**
