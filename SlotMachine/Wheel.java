@@ -38,7 +38,7 @@ public class Wheel {
      *
      * @param symbol color CSS del simbolo que se eliminara.
      */
-    public Boolean delSymbol(String symbol) {
+    public boolean delSymbol(String symbol) {
         for (int i = 0; i < symbols.size(); i++) {
             if (symbols.get(i).hasColor(symbol)) {
                 symbols.remove(i);
