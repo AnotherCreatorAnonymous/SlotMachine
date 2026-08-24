@@ -18,6 +18,10 @@ bluej.pkh
 *.log
 
 # BlueJ files
+ 
+# Documentacion generada por BlueJ
+doc/
+
 
 # Astah files
 *.astah.lock
