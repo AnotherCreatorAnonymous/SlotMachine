@@ -65,8 +65,13 @@ public class SlotMachine
      *  @param color indica el color del nuevo simbolo
      */
     public void addSymbol(int pos, String color){
-        /* BORRAR DESPUES: validar color y pos; agregar el simbolo a la rueda
-         * correspondiente en esa posicion y registrar el resultado en isOK. */
+        if (wheels.isEmpty()) {
+            fail("Debe existir al menos una rueda antes de agregar simbolos.");
+            return;
+        }
+        int p = clamp(pos, wheels.size());
+        wheels.get(p - 1).addSymbol(color);
+        succeed();
     }
     
     /**
@@ -75,8 +80,17 @@ public class SlotMachine
         *  @param symbol color del simbolo a eliminar
      */
     public void delSymbol(String symbol){
-        /* BORRAR DESPUES: buscar el color en las ruedas, eliminar sus
-         * apariciones segun el diseño y registrar en isOK si la operacion fue posible. */
+        boolean removed = false;
+        for (Wheel w : wheels) {
+            if (w.delSymbol(symbol)) {
+                removed = true;
+            }
+        }
+        if (removed) {
+            succeed();
+        } else {
+            fail("El simbolo indicado no existe en ninguna rueda.");
+        }
     }
     
     /**
@@ -86,8 +100,16 @@ public class SlotMachine
      *  @param symbol simbolo a poner en la rueda
      */
     public void placeSymbol(int wheel, String symbol){
-        /* BORRAR DESPUES: validar la rueda y el simbolo; ubicar el simbolo
-         * visible en la rueda indicada y redibujarla si la maquina es visible. */
+        if (wheels.isEmpty()) {
+            fail("No hay ruedas en la maquina.");
+            return;
+        }
+        int p = clamp(wheel, wheels.size());
+        if (wheels.get(p - 1).setCurrentByColor(symbol)) {
+            succeed();
+        } else {
+            fail("El simbolo indicado no existe en la rueda.");
+        }
     }
     
     /**
