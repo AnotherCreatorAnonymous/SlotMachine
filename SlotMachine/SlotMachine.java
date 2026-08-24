@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JOptionPane;
 /**
  * Simula una maquina tragamonedas compuesta por una o mas ruedas.
