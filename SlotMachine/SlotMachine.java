@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 /**
  * Simula una maquina tragamonedas compuesta por una o mas ruedas.
  * Cada rueda contiene simbolos identificados por colores CSS.
@@ -9,18 +10,25 @@ import java.util.List;
  */
 public class SlotMachine
 {
-    // instance variables - replace the example below with your own
-    private List<Wheel> wheels;
+ // === MC1 ===
+    private static final int START_X = 50;
+    private static final int Y = 100;
+    private static final int SPACING = 80;
+    private static final int NORMAL_SIZE = 30;
+    private static final int JACKPOT_SIZE = 50;
+
+    private ArrayList<Wheel> wheels;
     private boolean isOK;
+    private boolean visible;
 
     /**
      * Construye una maquina tragamonedas sin ruedas y en estado correcto.
      */
-    public SlotMachine()
-    {
-        // initialise instance variables
-        wheels = new ArrayList<Wheel>();
+    public SlotMachine(){
+
         isOK = true;
+        visible = false;
+        wheels = new ArrayList<Wheel>();
     }
 
     /**
@@ -29,21 +37,9 @@ public class SlotMachine
      * @param pos indica la posicion de la rueda
      */
     public void addWheel(int pos){
-        /* BORRAR DESPUES: validar y normalizar pos; crear una rueda nueva,
-         * insertarla en wheels en la posicion indicada y actualizar isOK. */
-        if ( pos < 1 ){
-            wheels.add(new Wheel());
-            isOK = true;
-        }
-        else if ( pos > wheels.size() ){
-            wheels.add(new Wheel());
-            isOK = true;
-        }
-        else {
-            wheels.add(pos - 1, new Wheel());
-            isOK = true;
-        }
-        
+        int p = clamp(pos, wheels.size() + 1);
+        wheels.add(p - 1, new Wheel());
+        succeed();
     }
     
     /**
@@ -52,15 +48,13 @@ public class SlotMachine
      *  @param pos indica la posicion de la rueda a eliminar
      */
     public void delWheel(int pos){
-        /* BORRAR DESPUES: validar que exista una rueda en pos; eliminarla,
-         * actualizar la representacion grafica y registrar el resultado en isOK. */
-        if ( pos < 1 || pos > wheels.size() ){
-            isOK = false;
+        if (wheels.isEmpty()) {
+            fail("No hay ruedas para eliminar.");
+            return;
         }
-        else {
-        wheels.remove(pos - 1);
-        isOK = true;
-        }
+        int p = clamp(pos, wheels.size());
+        wheels.remove(p - 1);
+        succeed();
     }
     
     /**
@@ -70,8 +64,13 @@ public class SlotMachine
      *  @param color indica el color del nuevo simbolo
      */
     public void addSymbol(int pos, String color){
-        /* BORRAR DESPUES: validar color y pos; agregar el simbolo a la rueda
-         * correspondiente en esa posicion y registrar el resultado en isOK. */
+        if (wheels.isEmpty()) {
+            fail("Debe existir al menos una rueda antes de agregar simbolos.");
+            return;
+        }
+        int p = clamp(pos, wheels.size());
+        wheels.get(p - 1).addSymbol(color);
+        succeed();
     }
     
     /**
@@ -80,8 +79,17 @@ public class SlotMachine
         *  @param symbol color del simbolo a eliminar
      */
     public void delSymbol(String symbol){
-        /* BORRAR DESPUES: buscar el color en las ruedas, eliminar sus
-         * apariciones segun el diseño y registrar en isOK si la operacion fue posible. */
+        boolean removed = false;
+        for (Wheel w : wheels) {
+            if (w.delSymbol(symbol)) {
+                removed = true;
+            }
+        }
+        if (removed) {
+            succeed();
+        } else {
+            fail("El simbolo indicado no existe en ninguna rueda.");
+        }
     }
     
     /**
@@ -91,8 +99,16 @@ public class SlotMachine
      *  @param symbol simbolo a poner en la rueda
      */
     public void placeSymbol(int wheel, String symbol){
-        /* BORRAR DESPUES: validar la rueda y el simbolo; ubicar el simbolo
-         * visible en la rueda indicada y redibujarla si la maquina es visible. */
+        if (wheels.isEmpty()) {
+            fail("No hay ruedas en la maquina.");
+            return;
+        }
+        int p = clamp(wheel, wheels.size());
+        if (wheels.get(p - 1).setCurrentByColor(symbol)) {
+            succeed();
+        } else {
+            fail("El simbolo indicado no existe en la rueda.");
+        }
     }
     
     /**
@@ -135,9 +151,11 @@ public class SlotMachine
      *  Retorna los colores de los simbolos visibles en todas las ruedas de la maquina ordenados de izquierda a derecha
      */
     public String configuration(){
-        /* BORRAR DESPUES: consultar el simbolo visible de cada rueda y
-         * retornar sus colores ordenados de izquierda a derecha. */
-        return "Hola";
+        String[] config = new String[wheels.size()];
+        for (int i = 0; i < wheels.size(); i++) {
+            config[i] = wheels.get(i).currentColor();
+        }
+        return config;
     }
     
     /**
@@ -154,33 +172,76 @@ public class SlotMachine
      *  Hace visible la maquina, si ya es visible no hace nada
      */
     public void makeVisible(){
-        /* BORRAR DESPUES: marcar la maquina como visible y hacer visibles
-         * todas sus ruedas y simbolos mediante los componentes de shapes. */
+        if (visible) return;
+        visible = true;
+        redraw();
+        succeed();
     }
     
     /**
      *  Hace invisible la maquina, si ya es invisible no hace nada
      */
     public void makeInvisible(){
-        /* BORRAR DESPUES: ocultar todas las figuras de la maquina y evitar
-         * mostrar JOptionPane mientras la maquina este invisible. */
+        if (!visible) return;
+        for (Wheel w : wheels) {
+            w.hide();
+        }
+        visible = false;
+        succeed();
     }
     
+    // Mini-ciclo 7
+
     /**
      *  Cierra el simulador
      */
     public void exit(){
-        /* BORRAR DESPUES: ocultar y liberar la representacion grafica de la
-         * maquina, dejando registrado en isOK si el cierre fue exitoso. */
+        for (Wheel w : wheels) {
+            w.hide();
+        }
+        visible = false;
+        isOK = true;
     }
+
     
     /**
      *  Indica si la ultima operacion se realizo correctamente
      */
     public boolean ok(){
-        /* BORRAR DESPUES: retornar el valor de isOK, que debe representar
-         * exclusivamente el resultado de la ultima operacion solicitada. */
         return isOK;
+    }
+
+    //helpers privados para los metodos publicos funcionen correctamente y para no repetir codigo y Mini-ciclo 6
+    private int clamp(int pos, int max){
+        if (pos < 1) return 1;
+        if (pos > max) return max;
+        return pos;
+    }
+
+    private void succeed(){
+        isOK = true;
+        //redraw();
+    }
+
+    private void fail(String message){
+        isOK = false;
+        if (visible) {
+            JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    /**
+     *  Redibuja la maquina en su estado actual
+     */
+    private void redraw(){
+        if (!visible) return;
+        int size = isJackpot() ? JACKPOT_SIZE : NORMAL_SIZE;
+        int x = START_X;
+        for (Wheel w : wheels) {
+            w.showAt(x, Y, size);
+            x += SPACING;
+        }
     }
 }
 
