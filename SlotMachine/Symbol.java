@@ -3,7 +3,7 @@
  * Cada simbolo se identifica por un color y tiene una figura visual.
  *
  * @author Carlos Jimenez y Alejandro Ospina
- * @version 1.0
+ * @version 2.0
  */
 public class Symbol {
     private String color;

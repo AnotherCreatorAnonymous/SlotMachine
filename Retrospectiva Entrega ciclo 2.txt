@@ -1,0 +1,72 @@
+RETROSPECTIVA — PROYECTO INICIAL DOPO 2026-2
+Autores: Carlos Jimenez, Alejandro Ospina
+
+1. ESTADO DEL PROYECTO EN TERMINOS DE LOS MINI-CICLOS PLANIFICADOS
+
+Ciclo 1
+MC1  SlotMachine(), addWheel, delWheel .......................... Completado
+MC2  addSymbol, delSymbol, placeSymbol .......................... Completado
+MC3  spin(wheel), spin() ........................................ Completado
+MC4  symbols(), distinctSymbols(), configuration(), isJackpot() .. Completado en el ciclo 2 (MC8)
+MC5  makeVisible(), makeInvisible(), integracion con shapes ...... Completado
+MC6  ok(), manejo de errores, JOptionPane ....................... Completado
+MC7  exit(), revision de extensibilidad ......................... Completado
+
+Ciclo 2
+MC8  Refactoring de los metodos incompletos del ciclo 1 ......... Completado
+MC9  swap(wheel1, wheel2) — requisito 9 ......................... Completado
+MC10 lock(wheel) / unlock(wheel) — requisito 10 ................. Completado
+MC11 spin(wheel, steps) con movimiento paso a paso — req. 11 .... Completado
+MC12 spin(setSymbols) — requisito 12 ............................ Completado
+MC13 SlotMachineC2Test (20 casos) y SlotMachineCC2Test (4 casos) . Completado
+MC14 Documentacion, README y retrospectiva ...................... Completado
+
+Estado actual: el simulador cumple los requisitos 1 a 12. No se resuelve
+el problema de la maraton, unicamente se construye el simulador.
+
+2. ¿QUE SE HIZO BIEN?
+
+- La planificacion en mini-ciclos permitio dejar el proyecto ejecutable
+  y verificable en cada paso.
+- La separacion SlotMachine / Wheel / Symbol evito que las nuevas
+  operaciones del ciclo 2 tuvieran que tocar la logica de dibujo.
+- La centralizacion de errores en fail() y succeed() hizo que agregar
+  cinco operaciones nuevas no implicara repetir el manejo de errores.
+- ColorHelper cumplio el requisito de extensibilidad: agregar colores
+  no obligo a modificar codigo existente.
+
+3. ¿QUE NO SE HIZO BIEN?
+
+- Al cerrar el ciclo 1 quedaron dos metodos como stubs (distinctSymbols
+  e isJackpot) y la llamada a redraw() comentada dentro de succeed().
+  Como consecuencia, la maquina nunca cambiaba de apariencia al ganar y
+  la parte visual dependia de invocar makeVisible() de nuevo. Esto
+  consumio el primer mini-ciclo del ciclo 2.
+- symbols() consultaba unicamente la primera rueda, lo que era
+  inconsistente con distinctSymbols(). Se unifico el criterio: ambas
+  consultas trabajan sobre toda la maquina.
+- El ciclo 1 se entrego sin pruebas de unidad, de modo que los stubs no
+  fueron detectados por ninguna verificacion automatica.
+- Al borrar ruedas y simbolos no se ocultaban las figuras, lo que dejaba
+  circulos huerfanos en el Canvas.
+
+4. ¿QUE SE APRENDIO?
+
+- Un metodo que retorna un valor fijo compila igual que uno correcto:
+  sin pruebas de unidad no hay forma de distinguirlos. Las pruebas se
+  deben escribir en el mismo mini-ciclo en que se construye el metodo.
+- Disenar las pruebas preguntando "que deberia hacer" y "que no deberia
+  hacer" obligo a definir con precision el comportamiento del bloqueo y
+  de las configuraciones invalidas antes de programarlos.
+- Las operaciones que modifican varias ruedas a la vez (spin(setSymbols))
+  deben validar todo antes de aplicar cualquier cambio, para no dejar la
+  maquina en un estado intermedio.
+- Introducir el estado 'locked' en Wheel y no en SlotMachine evito
+  mantener una estructura paralela de indices bloqueados.
+
+5. ¿QUE SE HARA DIFERENTE EN EL CICLO 3?
+
+- No cerrar un mini-ciclo con codigo marcado como pendiente.
+- Escribir la prueba de unidad antes o junto con cada metodo nuevo.
+- Revisar en cada mini-ciclo que las operaciones nuevas respeten las
+  restricciones ya existentes (ruedas fijas, ruedas vacias).
