@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+
 import javax.swing.JOptionPane;
 /**
  * Simula una maquina tragamonedas compuesta por una o mas ruedas.
@@ -62,6 +64,7 @@ public class SlotMachine
      *  @param pos indica la posicion del simbolo en la rueda
      *  @param color indica el color del nuevo simbolo
      */
+    
     public void addSymbol(int pos, String color){
         if (wheels.isEmpty()) {
             fail("Debe existir al menos una rueda antes de agregar simbolos.");
@@ -161,18 +164,23 @@ public class SlotMachine
      */
     public String[] symbols(){
         if (wheels.isEmpty()) {
+            fail("No hay ruedas en la maquina.");
             return new String[0];
         }
         return wheels.get(0).allColors();
     }
 
     /**
-     *  Indica la cantidad de simbolos distintos que hay en la maquina
+     * Indica la cantidad de simbolos distintos que hay en la maquina.
      */
     public int distinctSymbols(){
-        /* BORRAR DESPUES: reunir los colores existentes en todas las ruedas
-         * sin repetirlos y retornar el numero de colores distintos. */
-        return 1;
+        LinkedHashSet<String> distinct = new LinkedHashSet<>();
+        for (Wheel w : wheels) {
+            for (String color : w.allColors()) {
+                distinct.add(color);
+            }
+        }
+        return distinct.size();
     }
     
     /**
@@ -187,23 +195,35 @@ public class SlotMachine
     }
     
     /**
-     *  Indica cuando hay un jackpot 
+     *  Indica cuando hay un jackpot.
      */
     public boolean isJackpot(){
-        /* BORRAR DESPUES: comparar la configuracion visible y retornar true
-         * cuando todas las ruedas tengan el mismo simbolo; cambiar la
-         * apariencia de la maquina al entrar o salir del estado ganador. */
-        return false;
+        String[] config = configuration();
+        if (config.length == 0) {
+            return false;
+        }
+        String first = config[0];
+        if (first == null) {
+            return false;
+        }
+        for (String color : config) {
+            if (!first.equals(color)) {
+                return false;
+            }
+        }
+        return true;
     }
+
     
     /**
      *  Hace visible la maquina, si ya es visible no hace nada
      */
     public void makeVisible(){
-        if (visible) return;
+        if (!visible){
         visible = true;
         redraw();
         succeed();
+        }
     }
     
     /**
@@ -224,10 +244,8 @@ public class SlotMachine
      *  Cierra el simulador
      */
     public void exit(){
-        for (Wheel w : wheels) {
-            w.hide();
-        }
-        visible = false;
+        makeInvisible();
+        wheels.clear();
         isOK = true;
     }
 
@@ -239,7 +257,8 @@ public class SlotMachine
         return isOK;
     }
 
-    //helpers privados para los metodos publicos funcionen correctamente y para no repetir codigo y Mini-ciclo 6
+    //helpers privados para los metodos publicos funcionen correctamente, para no repetir codigo y para Mini-ciclo 6
+
     private int clamp(int pos, int max){
         if (pos < 1) return 1;
         if (pos > max) return max;
