@@ -80,8 +80,7 @@ public class SlotMachine
     public void addSymbol(int pos, String color){
         Wheel w = getValidWheel(pos);
         if (w == null) return;
-        int symbolPos = clamp(pos, w.size() + 1);
-        w.addSymbol(symbolPos, color);
+        w.addSymbol(w.size() + 1, color);
         succeed();
     }
     
