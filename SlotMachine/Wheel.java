@@ -122,9 +122,6 @@ public class Wheel {
      * Hace girar la rueda y cambia el simbolo visible a uno aleatorio.
      */
     public void spin() {
-        if (symbols.isEmpty()) {
-            return;
-        }
         current = new Random().nextInt(symbols.size());
     }
 
