@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -25,7 +26,7 @@ public class SlotMachine {
 
     private Rectangle housing;
 
-    private ArrayList<Wheel> wheels;
+    private List<Wheel> wheels;
     private boolean isOK;
     private boolean visible;
 
@@ -58,14 +59,9 @@ public class SlotMachine {
      * @param pos indica la posicion de la rueda a eliminar
      */
     public void delWheel(int pos) {
-        Wheel w = getValidWheel(pos);
+        Wheel w = getFreeWheel(pos);
         if (w == null) 
             return;
-
-        if (w.isLocked()) {
-            fail("La rueda indicada esta bloqueada.");
-            return;
-        }
 
         w.hide();
         wheels.remove(w);
@@ -73,24 +69,34 @@ public class SlotMachine {
     }
 
     /**
-     * Añade un simbolo nuevo a la rueda en la posicion y del color indicado
+     * Añade un simbolo nuevo al final de la rueda en la posicion y del color indicado
      * 
-     * @param pos   indica la posicion del simbolo en la rueda
+     * @param pos   indica la rueda a la que se agregara el simbolo
      * @param color indica el color del nuevo simbolo (ej. "azure", "beige", "black",
      *              "blue", "brown", "chartreuse", "coral", "crimson", "cyan",
      *              "darkGray", "deepPink", "deepSkyBlue", "dodgerBlue", "firebrick",
      *              "forestGreen", "gold", "goldenRod", "gray", "green", "indigo",
      *              "khaki", "lavender", "lightCoral", "lightGray", "lime", "magenta",
      *              "maroon", "mediumSeaGreen", "midnightBlue", "navy", "olive",
-     *              "orange", "orchid", "peru", "pink", "plum", "purple", "red",
-     *              "rosyBrown", "salmon", "sandybrown", "seagreen", "sienna",
+     *              "orange", "orchid", "peru", "pink", "plum", "purple", "rosyBrown", 
+     *              "salmon", "sandybrown", "seagreen", "sienna",
      *              "slateGray", "springGreen", "steelBlue", "teal", "tomato",
-     *              "turquoise", "violet", "white", "yellow")
+     *              "turquoise", "violet", "white", "yellow", "red")
      */
     public void addSymbol(int pos, String color) {
         Wheel w = getValidWheel(pos);
         if (w == null)
             return;
+
+        if (!ColorHelper.isKnown(color)) {
+            fail("El color indicado no existe.");
+            return;
+        }
+        if (w.contains(color)) {
+            fail("La rueda ya tiene un simbolo de ese color.");
+            return;
+        }
+
         w.addSymbol(w.size() + 1, color);
         succeed();
     }
@@ -101,6 +107,12 @@ public class SlotMachine {
      * @param symbol color del simbolo a eliminar
      */
     public void delSymbol(String symbol) {
+        for (int i = 0; i < wheels.size(); i++) {
+            if (wheels.get(i).isLocked() && wheels.get(i).contains(symbol)) {
+                fail("La rueda " + (i + 1) + " esta bloqueada y contiene ese simbolo.");
+                return;
+            }
+        }
         boolean removed = false;
         for (Wheel w : wheels) {
             if (w.delSymbol(symbol)) {
@@ -121,15 +133,11 @@ public class SlotMachine {
      * @param symbol simbolo a poner en la rueda
      */
     public void placeSymbol(int wheel, String symbol) {
-        Wheel w = getValidWheel(wheel);
+        Wheel w = getFreeWheel(wheel);
         if (w == null) {
             return;
         }
 
-        if (w.isLocked()) {
-            fail("La rueda indicada esta bloqueada.");
-            return;
-        }
         if (w.setCurrentByColor(symbol)) {
             succeed();
         }
@@ -146,33 +154,28 @@ public class SlotMachine {
      * @param wheel indica la rueda a girar
      */
     public void spin(int wheel) {
-        Wheel w = getValidWheel(wheel);
+        Wheel w = getSpinnableWheel(wheel);
         if (w == null)
             return;
 
-        if (w.isLocked()) {
-            fail("La rueda indicada esta bloqueada.");
-            return;
-        }
-        if (w.isEmpty()) {
-            fail("La rueda indicada no tiene simbolos.");
-            return;
-        }
         w.spin();
         succeed();
     }
 
     /**
-     * Gira todas las ruedas que no esten fijas
+     *  Gira todas las ruedas Siempre que todas esten disponibles. 
+     *  Si alguna no esta disponible no hace nada.
      */
     public void spin() {
-        if (wheels.isEmpty()) {
-            fail("No hay ruedas en la maquina.");
+        if (!requireWheels())
             return;
-        }
         for (Wheel w : wheels) {
-            if (w.isEmpty() || w.isLocked()) {
-                fail("Una rueda no esta disponible para girar.");
+            if (w.isEmpty()) {
+                fail("Una rueda esta vacia y no se puede girar.");
+                return;
+            }
+            if (w.isLocked()) {
+                fail("Una rueda esta bloqueada y no se puede girar.");
                 return;
             }
         }
@@ -189,30 +192,26 @@ public class SlotMachine {
      * de izquierda a derecha y en el orden en el que fueron agregados
      */
     public String[] symbols() {
-        if (wheels.isEmpty()) {
-            fail("No hay ruedas en la maquina.");
+        if (!requireWheels())
             return new String[0];
-        }
-        ArrayList<String> all = new ArrayList<String>();
-        for (Wheel w : wheels) {
-            for (String color : w.allColors()) {
-                all.add(color);
-            }
-        }
-        return all.toArray(new String[0]);
+        return collectColors().toArray(new String[0]);
     }
 
     /**
      * Indica la cantidad de simbolos distintos que hay en la maquina.
      */
     public int distinctSymbols() {
-        LinkedHashSet<String> distinct = new LinkedHashSet<>();
+        return new LinkedHashSet<>(collectColors()).size();
+    }
+
+    private List<String> collectColors() {
+        List<String> all = new ArrayList<String>();
         for (Wheel w : wheels) {
             for (String color : w.allColors()) {
-                distinct.add(color);
+                all.add(color);
             }
         }
-        return distinct.size();
+        return all;
     }
 
     /**
@@ -253,7 +252,6 @@ public class SlotMachine {
     public void makeVisible() {
         if (!visible) {
             visible = true;
-            redraw();
             succeed();
         }
     }
@@ -280,7 +278,6 @@ public class SlotMachine {
     public void exit() {
         makeInvisible();
         wheels.clear();
-        housing.makeInvisible();
         isOK = true;
     }
 
@@ -300,6 +297,10 @@ public class SlotMachine {
         if (pos > max)
             return max;
         return pos;
+    }
+
+    private int validIndex(int pos) {
+        return clamp(pos, wheels.size()) - 1;
     }
 
     private void succeed() {
@@ -322,6 +323,11 @@ public class SlotMachine {
             return;
         int size = isJackpot() ? JACKPOT_SIZE : NORMAL_SIZE;
 
+        drawHousing(size);
+        drawWheels(size);
+    }
+
+    private void drawHousing(int size){
         int slots = Math.max(wheels.size(), 1);
         int frameX = START_X - FRAME_MARGIN;
         int frameY = Y - FRAME_MARGIN;
@@ -338,7 +344,9 @@ public class SlotMachine {
         } else {
             housing.makeVisible();
         }
+    }
 
+    private void drawWheels(int size){
         int x = START_X;
         for (Wheel w : wheels) {
             w.showAt(x, Y, size);
@@ -362,20 +370,20 @@ public class SlotMachine {
             fail("Se necesitan al menos dos ruedas para intercambiar.");
             return;
         }
-        int p1 = clamp(wheel1, wheels.size());
-        int p2 = clamp(wheel2, wheels.size());
-        if (p1 == p2) {
+        int i1 = validIndex(wheel1);
+        int i2 = validIndex(wheel2);
+        if (i1 == i2) {
             fail("Debe indicar dos ruedas diferentes.");
             return;
         }
-        Wheel first = wheels.get(p1 - 1);
-        Wheel second = wheels.get(p2 - 1);
+        Wheel first = wheels.get(i1);
+        Wheel second = wheels.get(i2);
         if (first.isLocked() || second.isLocked()) {
             fail("No se puede intercambiar una rueda fija.");
             return;
         }
-        wheels.set(p1 - 1, second);
-        wheels.set(p2 - 1, first);
+        wheels.set(i1, second);
+        wheels.set(i2, first);
         succeed();
     }
 
@@ -391,11 +399,11 @@ public class SlotMachine {
         Wheel w = getValidWheel(wheel);
         if (w == null)
             return;
-
         if (w.isLocked()) {
             fail("La rueda indicada ya esta bloqueada.");
             return;
         }
+
         w.lock();
         succeed();
     }
@@ -410,11 +418,11 @@ public class SlotMachine {
         Wheel w = getValidWheel(wheel);
         if (w == null)
             return;
-
         if (!w.isLocked()) {
             fail("La rueda indicada no esta bloqueada.");
             return;
         }
+
         w.unlock();
         succeed();
     }
@@ -429,18 +437,10 @@ public class SlotMachine {
      * @param steps cantidad de pasos a rotar
      */
     public void spin(int wheel, int steps) {
-        Wheel w = getValidWheel(wheel);
+        Wheel w = getSpinnableWheel(wheel);
         if (w == null)
             return;
-
-        if (w.isEmpty()) {
-            fail("La rueda indicada no tiene simbolos.");
-            return;
-        }
-        if (w.isLocked()) {
-            fail("La rueda indicada esta fija.");
-            return;
-        }
+        
         int direction = steps < 0 ? -1 : 1;
         int total = Math.abs(steps);
         for (int i = 0; i < total; i++) {
@@ -462,10 +462,8 @@ public class SlotMachine {
      * @param setSymbols colores que debe mostrar cada rueda
      */
     public void spin(String[] setSymbols) {
-        if (wheels.isEmpty()) {
-            fail("No hay ruedas en la maquina.");
+        if (!requireWheels())
             return;
-        }
         if (setSymbols == null || setSymbols.length != wheels.size()) {
             fail("La configuracion debe indicar un simbolo por cada rueda.");
             return;
@@ -491,16 +489,49 @@ public class SlotMachine {
     // helper de validacion
 
     /**
-     * Valida si la maquina tiene ruedas y retorna la rueda ajustada a los limites.
-     * Registra el fallo y retorna null si esta vacia.
+     *  Validacion si la maquina tiene ruedas y retorna la rueda ajustada a los limites.
+     *  Registra el fallo y retorna null si esta vacia.
      */
     private Wheel getValidWheel(int pos) {
-        if (wheels.isEmpty()) {
-            fail("No hay ruedas en la maquina.");
+        if (!requireWheels())
             return null;
-        }
-        int p = clamp(pos, wheels.size());
-        return wheels.get(p - 1);
+        return wheels.get(validIndex(pos));
     }
 
+    /**
+     *  Retorna una rueda libre (no bloqueada) o null si no hay ruedas o la rueda indicada esta bloqueada.
+     */
+    private Wheel getFreeWheel(int pos) {
+        Wheel w = getValidWheel(pos);
+        if (w == null)
+            return null;
+        if (w.isLocked()) {
+            fail("La rueda indicada esta bloqueada.");
+            return null;
+        }
+        return w;
+    }
+
+    /**
+     *  Retorna una rueda que se puede girar (no bloqueada y no vacia) 
+     *  o null si no hay ruedas o la rueda indicada no se puede girar.
+     */
+    private Wheel getSpinnableWheel(int pos) {
+        Wheel w = getFreeWheel(pos);
+        if (w == null)
+            return null;
+        if (w.isEmpty()) {
+            fail("La rueda indicada no tiene simbolos.");
+            return null;
+        }
+        return w;
+    }
+
+    private boolean requireWheels() {
+        if (wheels.isEmpty()) {
+            fail("No hay ruedas en la maquina.");
+            return false;
+        }
+        return true;
+    }
 }

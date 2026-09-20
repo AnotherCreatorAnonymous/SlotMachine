@@ -88,4 +88,13 @@ public class ColorHelper {
     public static void register(String name, Color color) {
         CSS_COLORS.put(name, color);
     }
+
+    /**
+     * Indica si un nombre de color CSS es conocido por el sistema.
+     * @param name
+     * @return
+     */
+    public static boolean isKnown(String name) {
+    return CSS_COLORS.containsKey(name);
+}
 }

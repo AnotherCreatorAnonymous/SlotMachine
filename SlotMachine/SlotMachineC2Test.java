@@ -265,4 +265,99 @@ public class SlotMachineC2Test {
         machine.spin(new String[]{"blue", "green"});
         assertFalse(machine.isJackpot());
     }
+
+    /**
+     * No deberia agregar un simbolo con un color que no existe.
+     */
+    @Test
+    public void shouldNotAddASymbolWithAnUnknownColor() {
+        machine.addSymbol(1, "purpel");
+        assertFalse(machine.ok());
+        assertEquals(6, machine.symbols().length);
+    }
+
+    /**
+     * No deberia agregar un simbolo con color nulo.
+     */
+    @Test
+    public void shouldNotAddASymbolWithANullColor() {
+        machine.addSymbol(1, null);
+        assertFalse(machine.ok());
+        assertEquals(6, machine.symbols().length);
+    }
+
+    /**
+     * No deberia repetir un color en la misma rueda.
+     */
+    @Test
+    public void shouldNotAddARepeatedColorToTheSameWheel() {
+        machine.addSymbol(1, "red");
+        assertFalse(machine.ok());
+        assertEquals(6, machine.symbols().length);
+    }
+
+    /**
+     * Deberia permitir el mismo color en ruedas distintas.
+     */
+    @Test
+    public void shouldAddTheSameColorToDifferentWheels() {
+        machine.addWheel(3);
+        machine.addSymbol(3, "red");
+        assertTrue(machine.ok());
+        assertEquals(7, machine.symbols().length);
+    }
+
+    /**
+     * No deberia agregar un simbolo si la maquina no tiene ruedas.
+     */
+    @Test
+    public void shouldNotAddASymbolWithoutWheels() {
+        SlotMachine empty = new SlotMachine();
+        empty.addSymbol(1, "red");
+        assertFalse(empty.ok());
+    }
+
+    /**
+     * No deberia borrar un simbolo que esta en una rueda bloqueada.
+     */
+    @Test
+    public void shouldNotDeleteASymbolFromALockedWheel() {
+        machine.lock(1);
+        machine.delSymbol("red");
+        assertFalse(machine.ok());
+        assertArrayEquals(new String[]{"red", "red"}, machine.configuration());
+        assertEquals(6, machine.symbols().length);
+    }
+
+    /**
+     * Deberia mantener el simbolo visible al borrar otro que estaba antes.
+     */
+    @Test
+    public void shouldKeepTheVisibleSymbolWhenDeletingAnEarlierOne() {
+        machine.addSymbol(1, "yellow");
+        machine.placeSymbol(1, "blue");
+        machine.delSymbol("red");
+        assertTrue(machine.ok());
+        assertEquals("blue", machine.configuration()[0]);
+    }
+
+    /**
+     * No deberia girar una rueda sin simbolos.
+     */
+    @Test
+    public void shouldNotSpinAWheelWithoutSymbols() {
+        machine.addWheel(3);
+        machine.spin(3);
+        assertFalse(machine.ok());
+    }
+
+    /**
+     * No deberia girar ninguna rueda si alguna esta bloqueada.
+     */
+    @Test
+    public void shouldNotSpinAnyWheelIfOneIsLocked() {
+        machine.lock(1);
+        machine.spin();
+        assertFalse(machine.ok());
+    }
 }

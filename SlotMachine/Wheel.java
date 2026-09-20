@@ -15,6 +15,7 @@ public class Wheel {
     private int current;
     // MC10
     private boolean locked;
+    private static final Random RANDOM = new Random();
 
     /**
      * Construye una rueda sin simbolos y con una posicion visible inicial.
@@ -60,6 +61,7 @@ public class Wheel {
             if (symbols.get(i).hasColor(symbol)) {
                 symbols.get(i).makeInvisible();
                 symbols.remove(i);
+                if (i < current) current--;
                 if (current >= symbols.size()) {
                     current = Math.max(0, symbols.size() - 1);
                 }
@@ -115,6 +117,15 @@ public class Wheel {
         }
     }
 
+    /**
+     * Muestra todos los simbolos de la rueda.
+     */
+    public void show() {
+        for (Symbol s : symbols) {
+            s.makeVisible();
+        }
+    }
+
     
     //  MC3 
 
@@ -122,7 +133,7 @@ public class Wheel {
      * Hace girar la rueda y cambia el simbolo visible a uno aleatorio.
      */
     public void spin() {
-        current = new Random().nextInt(symbols.size());
+        current = RANDOM.nextInt(symbols.size());
     }
 
     //  MC4
@@ -218,5 +229,6 @@ public class Wheel {
         int n = symbols.size();
         current = ((current + steps) % n + n) % n;
     }
+
 }
 
