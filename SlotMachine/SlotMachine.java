@@ -62,24 +62,6 @@ public class SlotMachine {
     }
 
     /**
-     * Construye una maquina de n ruedas, cada una con los mismos n simbolos,
-     * y la deja en una configuracion aleatoria.
-     *
-     * @param n cantidad de ruedas y de simbolos por rueda
-     */
-    public SlotMachine(int n) {
-        this();
-        String[] palette = ColorHelper.palette(n);
-        for (int i = 1; i <= n; i++) {
-            addWheel(i);
-            for (String color : palette) {
-                addSymbol(i, color);
-            }
-        }
-        spin();
-    }
-
-    /**
      * Agrega una nueva rueda a la maquina en la posicion deseada
      * 
      * @param pos indica la posicion de la rueda

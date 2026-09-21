@@ -10,7 +10,7 @@ import org.junit.Test;
  * @author Carlos Jimenez y Alejandro Ospina
  * @version 3.0 
  */
-public class SlotMachineContestCTest {
+public class SlotMachineCContestCTest {
 
     /**
      * Deberia ganar para cualquier tamaño de maquina entre tres y diez ruedas.
