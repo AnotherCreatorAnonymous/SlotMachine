@@ -12,7 +12,7 @@ import org.junit.Test;
  * Todas las pruebas se ejecutan en modo invisible.
  *
  * @author Carlos Jimenez y Alejandro Ospina
- * @version 2.0
+ * @version 3.0
  */
 public class SlotMachineC2Test {
 
@@ -238,15 +238,14 @@ public class SlotMachineC2Test {
     // === MC8: consultas completadas ===
 
     /**
-     * Deberia contar los simbolos distintos de toda la maquina.
+     * Deberia contar los simbolos visibles de toda la maquina.
      */
     @Test
     public void shouldCountTheDistinctSymbolsOfTheMachine() {
-        assertEquals(3, machine.distinctSymbols());
-        machine.addSymbol(2, "yellow");
-        assertEquals(4, machine.distinctSymbols());
+        assertEquals(1, machine.distinctSymbols());
+        machine.spin(new String[]{"red", "blue"});
+        assertEquals(2, machine.distinctSymbols());
     }
-
     /**
      * Deberia listar todos los simbolos de la maquina rueda por rueda.
      */

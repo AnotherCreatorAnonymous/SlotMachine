@@ -12,7 +12,7 @@ import org.junit.Test;
  * Cada caso de prueba identifica a sus autores en el nombre del metodo.
  * Todas las pruebas se ejecutan en modo invisible.
  *
- * @version 2.0
+ * @version 3.0
  */
 public class SlotMachineCC2Test {
 
