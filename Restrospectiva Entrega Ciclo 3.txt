@@ -1,0 +1,31 @@
+RETROSPECTIVA — CICLO 3 (Refactoring y Extensión)
+
+¿Qué funcionó bien?
+Separar el sensor del actuador. Al aceptar que consultar distinctSymbols() no
+gasta acciones y que girar sí, el diseño se reorientó a medir mucho y mover poco,
+y de ahí salió la idea de usar una rueda como antena.
+
+¿Qué no funcionó bien?
+El primer intento consistió en dispersar las ruedas para fabricar un hueco único.
+Funcionaba, pero mezclaba la medición con el movimiento y resultaba difícil de
+explicar y de probar por partes. Se descartó y se rehizo.
+
+¿Qué se aprendió?
+Que cuando la única información disponible es un contador, la pregunta correcta no
+es "cómo llego al jackpot" sino "cuánta información entrega cada giro". Un barrido
+completo de una rueda entrega el tablero entero; dos barridos consecutivos
+entregan la identidad de la rueda que se movió entre ellos. El algoritmo salió de
+esa cuenta, no de ensayo y error.
+
+¿Cuanto tiempo se invirtio cada uno?
+carlos Jimenez: 11 Horas
+Alejandro Ospina : 10 Horas
+
+¿Qué se hará distinto en el ciclo 4?
+Escribir la prueba de unidad antes que el método, y medir el número de acciones
+dentro de las pruebas y no como revisión posterior.
+
+Estado en términos de los mini-ciclos planificados
+Ciclo 1: MC1 a MC7 completados.
+Ciclo 2: MC8 a MC12 completados.
+Ciclo 3: MC13 a MC18 completados.
