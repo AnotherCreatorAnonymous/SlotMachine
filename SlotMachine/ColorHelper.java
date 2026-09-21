@@ -90,6 +90,60 @@ public class ColorHelper {
     }
 
     /**
+     * Orden fijo en el que se reparten los colores cuando se necesita una
+     * cantidad dada de simbolos distintos. Se excluyen "white", que no se
+     * distingue del fondo del lienzo, y "darkGray", que usa la carcasa.
+     */
+    private static final String[] PALETTE = {
+        "red", "blue", "green", "yellow", "magenta", "cyan", "orange", "pink",
+        "purple", "navy", "olive", "teal", "maroon", "gold", "salmon", "violet",
+        "indigo", "turquoise", "lime", "orchid", "crimson", "coral", "khaki",
+        "lavender", "beige", "azure", "chartreuse", "peru", "slateGray",
+        "seagreen", "tomato", "deepPink", "forestGreen", "midnightBlue",
+        "rosyBrown", "firebrick", "dodgerBlue", "sienna", "plum", "lightCoral",
+        "mediumSeaGreen", "steelBlue", "deepSkyBlue", "springGreen", "goldenRod",
+        "brown", "sandybrown", "gray", "lightGray", "black"
+    };
+
+    /**
+     * Retorna n nombres de color distintos. Si se piden mas colores de los que
+     * tiene la paleta, se generan y se registran los que falten, de modo que la
+     * maquina no queda limitada por el tamaño de la paleta.
+     *
+     * @param n cantidad de colores distintos requeridos.
+     * @return arreglo con n nombres de color distintos.
+     */
+    public static String[] palette(int n) {
+        int total = Math.max(0, n);
+        String[] result = new String[total];
+        for (int i = 0; i < total; i++) {
+            if (i < PALETTE.length) {
+                result[i] = PALETTE[i];
+            } else {
+                result[i] = "extra" + i;
+                register(result[i], generate(i));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Indica cuantos colores trae la paleta base.
+     */
+    public static int paletteSize() {
+        return PALETTE.length;
+    }
+
+    /**
+     * Construye un color distinto de los anteriores repartiendo el circulo de
+     * tonos, para poder atender paletas mas grandes que la base.
+     */
+    private static Color generate(int index) {
+        float hue = (index * 0.618033f) % 1.0f;
+        return Color.getHSBColor(hue, 0.75f, 0.85f);
+    }
+    
+    /**
      * Indica si un nombre de color CSS es conocido por el sistema.
      * @param name
      * @return
