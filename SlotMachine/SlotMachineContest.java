@@ -1,33 +1,50 @@
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Write a description of class SlotMachineContest here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * Resuelve el problema de la maraton sobre una SlotMachine de n ruedas y n simbolos.
+ * La unica informacion que se puede leer de la maquina es distinctSymbols(),
+ * es decir cuantos simbolos distintos se ven en este momento.
+ *
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 3.0
  */
-public class SlotMachineContest
-{
-    // instance variables - replace the example below with your own
-    private int x;
+public class SlotMachineContest{
 
     /**
-     * Constructor for objects of class SlotMachineContest
+     * Resuelve una maquina de n ruedas y n simbolos sin mostrarla.
+     * Cada accion es un par {rueda, pasos}.
+     *
+     * @param n cantidad de ruedas y de simbolos.
+     * @return secuencia de acciones que llevan la maquina al jackpot.
      */
-    public SlotMachineContest()
-    {
-        // initialise instance variables
-        x = 0;
+    public static int[][] solve(int n) {
+        SlotMachine machine = new SlotMachine(n);
+        machine.makeInvisible();
+        return solve(machine, n);
     }
 
     /**
-     * An example of a method - replace this comment with your own
-     * 
-     * @param  y   a sample parameter for a method
-     * @return     the sum of x and y 
+     * Resuelve una maquina ya construida. Sirve para las pruebas de unidad,
+     * que necesitan revisar el estado final de la maquina.
+     *
+     * @param machine maquina de n ruedas y n simbolos.
+     * @param n cantidad de ruedas y de simbolos.
+     * @return secuencia de acciones que llevan la maquina al jackpot.
      */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    public static int[][] solve(SlotMachine machine, int n) {
+        return Jugar(machine, n);
     }
+
+    /**
+     * Resuelve la maquina mostrandola, para ver como se llega al jackpot.
+     *
+     * @param n cantidad de ruedas y de simbolos.
+     */
+    public static void simulate(int n) {
+        SlotMachine machine = new SlotMachine(n);
+        machine.makeVisible();
+        solve(machine, n);
+    }
+
 }
