@@ -1,7 +1,7 @@
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
-
+ 
 /**
  * Pruebas de unidad compartidas del curso para el ciclo 3.
  * Cada caso de prueba identifica a sus autores en el nombre del metodo.
