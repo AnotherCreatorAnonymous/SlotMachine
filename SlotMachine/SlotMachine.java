@@ -217,10 +217,16 @@ public class SlotMachine {
     }
 
     /**
-     * Indica la cantidad de simbolos distintos que hay en la maquina.
+     * Indica la cantidad de simbolos distintos que la maquina esta mostrando.
      */
     public int distinctSymbols() {
-        return new LinkedHashSet<>(collectColors()).size();
+        LinkedHashSet<String> distinct = new LinkedHashSet<>();
+        for (String color : configuration()) {
+            if (color != null) {
+                distinct.add(color);
+            }
+        }
+        return distinct.size();
     }
 
     private List<String> collectColors() {

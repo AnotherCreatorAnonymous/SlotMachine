@@ -116,7 +116,7 @@ public class SlotMachineContest {
         int here = -1;
         boolean lonely = false;
 
-        while (here < 0) {
+        for (int attempt = 0; attempt < n && here < 0; attempt++) {
             rotate(machine, log, wheel, 1);
             boolean[] after = radar(machine, n, log);
             int arrived = -1;
@@ -137,6 +137,9 @@ public class SlotMachineContest {
                 lonely = false;
             }
             before = after;
+            if (here < 0) {
+                return before;
+            }
         }
 
         rotate(machine, log, wheel, shortest(n - here, n));
