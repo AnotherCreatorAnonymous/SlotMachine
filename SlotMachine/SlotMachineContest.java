@@ -28,18 +28,6 @@ public class SlotMachineContest {
     public static int[][] solve(int n) {
         SlotMachine machine = new SlotMachine(n);
         machine.makeInvisible();
-        return solve(machine, n);
-    }
-
-    /**
-     * Resuelve una maquina ya construida. Sirve para las pruebas de unidad,
-     * que necesitan revisar el estado final de la maquina.
-     *
-     * @param machine maquina de n ruedas y n simbolos.
-     * @param n cantidad de ruedas y de simbolos.
-     * @return secuencia de acciones que llevan la maquina al jackpot.
-     */
-    public static int[][] solve(SlotMachine machine, int n) {
         return play(machine, n);
     }
 
@@ -51,7 +39,7 @@ public class SlotMachineContest {
     public static void simulate(int n) {
         SlotMachine machine = new SlotMachine(n);
         machine.makeVisible();
-        solve(machine, n);
+        play(machine, n);
     }
 
     // Algoritmo de solución 
@@ -186,5 +174,18 @@ public class SlotMachineContest {
             actions[i] = log.get(i);
         }
         return actions;
+    }
+    
+    // metodo usado para las pruebas de unidad
+    /**
+     * Resuelve una maquina ya construida. Sirve para las pruebas de unidad,
+     * que necesitan revisar el estado final de la maquina.
+     *
+     * @param machine maquina de n ruedas y n simbolos.
+     * @param n cantidad de ruedas y de simbolos.
+     * @return secuencia de acciones que llevan la maquina al jackpot.
+     */
+    public static int[][] solve(SlotMachine machine, int n) {
+        return play(machine, n);
     }
 }
