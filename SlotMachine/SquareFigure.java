@@ -1,33 +1,43 @@
-
 /**
- * Write a description of class SquareFigure here.
+ * Adapta Rectangle a la interfaz Figure, usandolo siempre como cuadrado.
+ * Es la forma de los simbolos timidos.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 4.0
  */
-public class SquareFigure
-{
-    // instance variables - replace the example below with your own
-    private int x;
+public class SquareFigure implements Figure {
 
-    /**
-     * Constructor for objects of class SquareFigure
-     */
-    public SquareFigure()
-    {
-        // initialise instance variables
-        x = 0;
+    private Rectangle shape;
+
+    /** 
+     * Construye la figura con un rectangulo del paquete shapes. 
+    */
+    public SquareFigure() {
+        shape = new Rectangle();
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    @Override
+    public void moveTo(int x, int y) {
+        shape.moveTo(x, y);
+    }
+
+    @Override
+    public void changeSize(int size) {
+        shape.changeSize(size, size);
+    }
+
+    @Override
+    public void changeColor(String color) {
+        shape.changeColor(color);
+    }
+
+    @Override
+    public void makeVisible() {
+        shape.makeVisible();
+    }
+
+    @Override
+    public void makeInvisible() {
+        shape.makeInvisible();
     }
 }
