@@ -3,9 +3,9 @@
  * Cada simbolo se identifica por un color y tiene una figura visual.
  *
  * @author Carlos Jimenez y Alejandro Ospina
- * @version 2.0
+ * @version 4.0
  */
-public class Symbol {
+public abstract class Symbol {
     private String color;
     private Circle shape;
 
@@ -16,11 +16,51 @@ public class Symbol {
      * @param x posicion horizontal.
      * @param y posicion vertical.
      */
-    public Symbol(String color, int x, int y) {
+    protected Symbol(String color, int x, int y) {
         this.color = color;
         shape = new Circle();
         shape.changeColor(color);
         shape.moveTo(x, y);
+    }
+
+    // MC20, lo que cada tipo de simbolo puede cambiar
+
+    /**
+     * Retorna el nombre del tipo de simbolo.
+     */
+    public abstract String type();
+
+    /**
+     * Se invoca cada vez que gira la rueda que contiene este simbolo.
+     * Por defecto no hace nada.
+     */
+    public void onSpin() {
+    }
+
+    /**
+     * Se invoca cada vez que este simbolo queda seleccionado en su rueda.
+     * Por defecto no hace nada.
+     */
+    public void onSelected() {
+    }
+
+    /**
+     * Indica si el simbolo debe dibujarse cuando esta seleccionado.
+     * Por defecto siempre se dibuja.
+     */
+    public boolean isShown() {
+        return true;
+    }
+
+    /**
+     * Ajusta el tamaño que pide la maquina al tamaño propio del simbolo.
+     * Por defecto se respeta el tamaño pedido.
+     *
+     * @param size tamaño que pide la maquina.
+     * @return tamaño con el que realmente se dibuja.
+     */
+    protected int scaled(int size) {
+        return size;
     }
 
     /**
@@ -82,6 +122,6 @@ public class Symbol {
      * @param diameter nuevo diametro del simbolo.
      */
     public void changeSize(int diameter) {
-        shape.changeSize(diameter);
+        shape.changeSize(scaled(diameter));
     }
 }
