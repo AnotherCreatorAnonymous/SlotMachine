@@ -1,17 +1,35 @@
-
 /**
- * Write a description of interface Figure here.
+ * Figura que puede dibujar un simbolo. Existe para que cada tipo de simbolo
+ * elija su propia forma sin que Symbol tenga que conocer las clases del
+ * paquete shapes, que no comparten una interfaz comun.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 4.0
  */
-public interface Figure
-{
-    /**
-     * An example of a method header - replace this comment with your own
-     *
-     * @param  y a sample parameter for a method
-     * @return   the result produced by sampleMethod
-     */
-    int sampleMethod(int y);
+public interface Figure {
+
+    /** 
+     * Mueve la figura a una posicion absoluta. 
+    */
+    void moveTo(int x, int y);
+
+    /** 
+     * Ajusta la figura a un cuadro de lado size. 
+    */
+    void changeSize(int size);
+
+    /** 
+     * Cambia el color de la figura. 
+    */
+    void changeColor(String color);
+
+    /** 
+     * Hace visible la figura. 
+    */
+    void makeVisible();
+
+    /** 
+     * Hace invisible la figura.  
+    */
+    void makeInvisible();
 }
