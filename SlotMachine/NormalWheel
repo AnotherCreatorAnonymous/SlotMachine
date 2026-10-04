@@ -1,0 +1,20 @@
+/**
+ * Rueda corriente: gira de forma circular y acepta todas las operaciones.
+ *
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 4.0
+ */
+public class NormalWheel extends Wheel {
+
+    /** 
+     * Construye una rueda normal sin simbolos.
+     */
+    public NormalWheel() {
+        super();
+    }
+
+    @Override
+    public String type() {
+        return "normal";
+    }
+}
