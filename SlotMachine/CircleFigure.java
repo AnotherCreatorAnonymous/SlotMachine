@@ -1,33 +1,42 @@
-
 /**
- * Write a description of class CircleFigure here.
+ * Adapta Circle a la interfaz Figure. Es la forma de los simbolos normales.
  *
- * @author (your name)
- * @version (a version number or a date)
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 4.0
  */
-public class CircleFigure
-{
-    // instance variables - replace the example below with your own
-    private int x;
+public class CircleFigure implements Figure {
 
-    /**
-     * Constructor for objects of class CircleFigure
+    private Circle shape;
+
+    /** 
+     * Construye la figura con un circulo del paquete shapes. 
      */
-    public CircleFigure()
-    {
-        // initialise instance variables
-        x = 0;
+    public CircleFigure() {
+        shape = new Circle();
     }
 
-    /**
-     * An example of a method - replace this comment with your own
-     *
-     * @param  y  a sample parameter for a method
-     * @return    the sum of x and y
-     */
-    public int sampleMethod(int y)
-    {
-        // put your code here
-        return x + y;
+    @Override
+    public void moveTo(int x, int y) {
+        shape.moveTo(x, y);
+    }
+
+    @Override
+    public void changeSize(int size) {
+        shape.changeSize(size);
+    }
+
+    @Override
+    public void changeColor(String color) {
+        shape.changeColor(color);
+    }
+
+    @Override
+    public void makeVisible() {
+        shape.makeVisible();
+    }
+
+    @Override
+    public void makeInvisible() {
+        shape.makeInvisible();
     }
 }
