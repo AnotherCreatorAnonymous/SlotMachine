@@ -1,0 +1,59 @@
+/**
+ * Rueda zurda: si tiene una rueda a su izquierda, al girar copia su estado en
+ * vez de moverse por su cuenta. Si no tiene vecina, o la vecina muestra un
+ * simbolo que esta rueda no tiene, gira como una normal.
+ *
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 4.0
+ */
+public class LeftWheel extends Wheel {
+
+    /** 
+     * Construye una rueda zurda sin simbolos. 
+     */
+    public LeftWheel() {
+        super();
+    }
+
+    @Override
+    public String type() {
+        return "lefty";
+    }
+
+    @Override
+    protected String markColor() {
+        return "dodgerBlue";
+    }
+
+    @Override
+    public void rotate(int steps) {
+        if (copyLeft()) {
+            wearOut();
+        } else {
+            super.rotate(steps);
+        }
+    }
+
+    @Override
+    public void spin() {
+        if (copyLeft()) {
+            wearOut();
+        } else {
+            super.spin();
+        }
+    }
+
+    /**
+     * Intenta mostrar el mismo simbolo que la vecina de la izquierda.
+     *
+     * @return true si logro copiarla.
+     */
+    private boolean copyLeft() {
+        Wheel neighbour = leftWheel();
+        if (neighbour == null) {
+            return false;
+        }
+        String color = neighbour.currentColor();
+        return color != null && setCurrentByColor(color);
+    }
+}
