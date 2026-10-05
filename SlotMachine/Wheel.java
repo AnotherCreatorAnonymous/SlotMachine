@@ -41,7 +41,9 @@ public class Wheel {
     /**
      * Retorna el nombre del tipo de rueda.
      */
-    public String type();
+    public String type() {
+        return "normal";
+    }
 
     /**
      * Color de la marca con la que esta rueda se reconoce en pantalla.

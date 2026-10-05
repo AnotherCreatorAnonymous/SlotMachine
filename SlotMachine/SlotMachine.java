@@ -61,14 +61,24 @@ public class SlotMachine {
         spin();
     }
 
-    /**
-     * Agrega una nueva rueda a la maquina en la posicion deseada
-     * 
-     * @param pos indica la posicion de la rueda
-     */
     public void addWheel(int pos) {
-        int p = clamp(pos, wheels.size() + 1);
-        wheels.add(p - 1, new Wheel());
+        addWheel(WheelFactory.DEFAULT, pos);
+    }
+
+    /**
+     * Agrega una rueda del tipo indicado en la posicion deseada
+     *
+     * @param type tipo de rueda ("normal", "lefty", "rebel", "mirror")
+     * @param pos  indica la posicion de la rueda
+     */
+    public void addWheel(String type, int pos) {
+        Wheel w = WheelFactory.create(type);
+        if (w == null) {
+            fail("El tipo de rueda indicado no existe.");
+            return;
+        }
+        wheels.add(toIndex(pos, wheels.size() + 1), w);
+        relink();
         succeed();
     }
 
@@ -82,8 +92,14 @@ public class SlotMachine {
         if (w == null) 
             return;
 
+        if (!w.canDelete()) {
+            fail("La rueda indicada no se deja eliminar.");
+            return;
+        }
+
         w.hide();
         wheels.remove(w);
+        relink();
         succeed();
     }
 
@@ -103,10 +119,25 @@ public class SlotMachine {
      *              "turquoise", "violet", "white", "yellow", "red")
      */
     public void addSymbol(int pos, String color) {
+        addSymbol(SymbolFactory.DEFAULT, pos, color);
+    }
+
+    /**
+     * Añade un simbolo del tipo y color indicados al final de la rueda
+     *
+     * @param type  tipo de simbolo ("normal", "ephemeral", "shy")
+     * @param pos   indica la rueda a la que se agregara el simbolo
+     * @param color indica el color del nuevo simbolo
+     */
+    public void addSymbol(String type, int pos, String color) {
         Wheel w = getValidWheel(pos);
         if (w == null)
             return;
 
+        if (!SymbolFactory.isKnown(type)) {
+            fail("El tipo de simbolo indicado no existe.");
+            return;
+        }
         if (!ColorHelper.isKnown(color)) {
             fail("El color indicado no existe.");
             return;
@@ -116,7 +147,7 @@ public class SlotMachine {
             return;
         }
 
-        w.addSymbol(w.size() + 1, color);
+        w.addSymbol(w.size() + 1, type, color);
         succeed();
     }
 
@@ -316,16 +347,12 @@ public class SlotMachine {
     // helpers privados para los metodos publicos funcionen correctamente, para no
     // repetir codigo y para Mini-ciclo 6
 
-    private int clamp(int pos, int max) {
+    private int toIndex(int pos, int max) {
         if (pos < 1)
-            return 1;
+            return 0;
         if (pos > max)
-            return max;
-        return pos;
-    }
-
-    private int validIndex(int pos) {
-        return clamp(pos, wheels.size()) - 1;
+            return max - 1;
+        return pos - 1;
     }
 
     private void succeed() {
@@ -395,8 +422,8 @@ public class SlotMachine {
             fail("Se necesitan al menos dos ruedas para intercambiar.");
             return;
         }
-        int i1 = validIndex(wheel1);
-        int i2 = validIndex(wheel2);
+        int i1 = toIndex(wheel1, wheels.size());
+        int i2 = toIndex(wheel2, wheels.size());
         if (i1 == i2) {
             fail("Debe indicar dos ruedas diferentes.");
             return;
@@ -407,8 +434,13 @@ public class SlotMachine {
             fail("No se puede intercambiar una rueda fija.");
             return;
         }
+        if (!first.canSwap() || !second.canSwap()) {
+            fail("Una de las ruedas indicadas no se deja intercambiar.");
+            return;
+        }
         wheels.set(i1, second);
         wheels.set(i2, first);
+        relink();
         succeed();
     }
 
@@ -424,6 +456,10 @@ public class SlotMachine {
         Wheel w = getValidWheel(wheel);
         if (w == null)
             return;
+        if (!w.canLock()) {
+            fail("La rueda indicada no se deja bloquear.");
+            return;
+        }
         if (w.isLocked()) {
             fail("La rueda indicada ya esta bloqueada.");
             return;
@@ -520,7 +556,7 @@ public class SlotMachine {
     private Wheel getValidWheel(int pos) {
         if (!requireWheels())
             return null;
-        return wheels.get(validIndex(pos));
+        return wheels.get(toIndex(pos, wheels.size()));
     }
 
     /**
@@ -550,6 +586,19 @@ public class SlotMachine {
             return null;
         }
         return w;
+    }
+
+    /**
+     *  Vuelve a enlazar cada rueda con la que le queda a la izquierda.
+     *  Se llama cada vez que cambia el orden o la cantidad de ruedas,
+     *  porque las ruedas zurdas dependen de su vecina.
+     */
+    private void relink() {
+        Wheel previous = null;
+        for (Wheel w : wheels) {
+            w.setLeft(previous);
+            previous = w;
+        }
     }
 
     private boolean requireWheels() {

@@ -125,9 +125,9 @@ public class SlotMachineContest {
                 lonely = false;
             }
             before = after;
-            if (here < 0) {
-                return before;
-            }
+        }
+        if (here < 0) {
+            return before;
         }
 
         rotate(machine, log, wheel, shortest(n - here, n));

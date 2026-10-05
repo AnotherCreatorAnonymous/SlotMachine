@@ -1,0 +1,28 @@
+RETROSPECTIVA — CICLO 4 (Tipos de ruedas y de símbolos)
+
+¿Qué funcionó bien?
+El diseño basado en ganchos (template methods) con comportamiento por defecto neutro en las clases base concretas Wheel y Symbol. Esto permitió que las subclases especializadas (LeftyWheel, RebelWheel, MirrorWheel, EphemeralSymbol, ShySymbol) fueran extremadamente compactas y expresaran únicamente las variaciones de su comportamiento sin duplicar lógica común. La integración de WheelFactory y SymbolFactory mediante mapas funcionales garantizó la extensibilidad en tiempo de ejecución sin modificar código existente.
+
+¿Qué no funcionó bien?
+Se descubrió que el solucionador del ciclo 3 (SlotMachineContest.collect) contenía un defecto sutil pero crítico: la guarda de terminación if (here < 0) return before; estaba ubicada dentro del cuerpo del bucle for en vez de estar afuera, lo que provocaba que la búsqueda de señal abortara en el primer intento infructuoso y el algoritmo fallara entre un 15% y un 70% de las veces según el tamaño n. Las pruebas unitarias originales del ciclo 3 no detectaron este fallo de forma consistente porque corrían pocas iteraciones aisladas.
+
+¿Qué se aprendió?
+Que la extensibilidad orientada por objetos se logra aislando los puntos de variación a través de ganchos bien definidos y delegando la creación a fábricas basadas en registros abiertos, en lugar de dispersar condicionales if/switch por el código. También se aprendió la importancia de las pruebas de esfuerzo probabilísticas y repetitivas sobre algoritmos con componentes aleatorios, comprobando múltiples ejecuciones consecutivas por cada tamaño de entrada.
+
+¿Cuanto tiempo se invirtio cada uno?
+Carlos Jimenez: 
+Alejandro Ospina: 
+
+¿Qué se hará distinto?
+En desarrollos futuros, automatizar pruebas de estrés desde la primera iteración de algoritmos heurísticos o de búsqueda, y verificar la compilación y pruebas de regresión de todos los ciclos anteriores tras cada refactorización puntual.
+
+Estado en términos de los mini-ciclos planificados
+Ciclo 1: MC1 a MC7 completados.
+Ciclo 2: MC8 a MC12 completados.
+Ciclo 3: MC13 a MC18 completados.
+Ciclo 4: MC19 a MC24 completados.
+
+Punto abierto y decisión de diseño pendiente
+Queda pendiente la decisión sobre las clases Figure, CircleFigure, TriangleFigure y SquareFigure: actualmente no se encuentran en uso ya que Symbol dibuja directamente con Circle. Los autores (Carlos y Alejandro) deberán decidir si:
+1. Se integran formalmente en Symbol (reemplazando Circle shape por Figure figure y añadiendo createFigure() para dotar de silueta geométrica distinta a cada símbolo según el requisito de usabilidad 1), o
+2. Se eliminan del proyecto por considerarse código muerto si se opta por diferenciar visualmente los símbolos únicamente por su comportamiento dinámico.

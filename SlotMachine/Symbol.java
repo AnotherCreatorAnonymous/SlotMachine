@@ -5,7 +5,7 @@
  * @author Carlos Jimenez y Alejandro Ospina
  * @version 4.0
  */
-public abstract class Symbol {
+public class Symbol {
     private String color;
     private Circle shape;
 
@@ -28,7 +28,9 @@ public abstract class Symbol {
     /**
      * Retorna el nombre del tipo de simbolo.
      */
-    public abstract String type();
+    public String type() {
+        return "normal";
+    }
 
     /**
      * Se invoca cada vez que gira la rueda que contiene este simbolo.
