@@ -9,7 +9,7 @@ import java.util.Random;
  * @version 4.0
  */
 
-public abstract class Wheel {
+public class Wheel {
 
     //  MC1 
     private List<Symbol> symbols;
@@ -41,7 +41,7 @@ public abstract class Wheel {
     /**
      * Retorna el nombre del tipo de rueda.
      */
-    public abstract String type();
+    public String type();
 
     /**
      * Color de la marca con la que esta rueda se reconoce en pantalla.
