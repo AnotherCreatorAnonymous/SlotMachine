@@ -6,9 +6,10 @@ import java.util.Random;
  * La rueda tambien debe conservar cual simbolo se encuentra visible.
  *
  * @author Carlos Jimenez y Alejandro Ospina
- * @version 2.0
+ * @version 4.0
  */
-public class Wheel {
+
+public abstract class Wheel {
 
     //  MC1 
     private List<Symbol> symbols;
@@ -16,15 +17,76 @@ public class Wheel {
     // MC10
     private boolean locked;
     private static final Random RANDOM = new Random();
+    private Wheel left;
+    // MC24
+    private static final int MARK_HEIGHT = 6;
+    private static final int MARK_GAP = 8;
+    private Rectangle mark;
 
     /**
      * Construye una rueda sin simbolos y con una posicion visible inicial.
      */
-    public Wheel() {
+    protected Wheel() {
         symbols = new ArrayList<>();
         current = 0;
         locked = false;
+        left = null;
+        mark = new Rectangle();
+        mark.changeColor(markColor());
     }
+
+
+    // MC21, lo que cada tipo de rueda puede cambiar
+
+    /**
+     * Retorna el nombre del tipo de rueda.
+     */
+    public abstract String type();
+
+    /**
+     * Color de la marca con la que esta rueda se reconoce en pantalla.
+     */
+    protected String markColor() {
+        return "slateGray";
+    }
+
+    /**
+     * Indica si esta rueda acepta que la bloqueen.
+     */
+    public boolean canLock() {
+        return true;
+    }
+
+    /**
+     * Indica si esta rueda acepta que la intercambien de posicion.
+     */
+    public boolean canSwap() {
+        return true;
+    }
+
+    /**
+     * Indica si esta rueda acepta que la eliminen de la maquina.
+     */
+    public boolean canDelete() {
+        return true;
+    }
+
+    /**
+     * Registra cual rueda queda a la izquierda de esta. La maquina la
+     * actualiza cada vez que cambia el orden de las ruedas.
+     *
+     * @param left rueda vecina de la izquierda, o null si esta es la primera.
+     */
+    public void setLeft(Wheel left) {
+        this.left = left;
+    }
+
+    /**
+     * Retorna la rueda vecina de la izquierda, o null si no hay.
+     */
+    protected Wheel leftWheel() {
+        return left;
+    }    
 
     //metodos mini-ciclo2
 
@@ -34,12 +96,13 @@ public class Wheel {
      * simbolos + 1, se usa el maximo (se agrega al final).
      *
      * @param pos   posicion donde se insertara el simbolo (1-based).
+     * @param type  tipo de simbolo.
      * @param color color CSS del simbolo que se agregara.
      * 
      */
-    public void addSymbol(int pos, String color) {
+    public void addSymbol(int pos, String type, String color) {
         int p = pos < 1 ? 1 : Math.min(pos, symbols.size() + 1);
-        symbols.add(p - 1, new Symbol(color, 0, 0));
+        symbols.add(p - 1, SymbolFactory.create(type, color));
     }
 
     /**
@@ -82,6 +145,7 @@ public class Wheel {
         for (int i = 0; i < symbols.size(); i++) {
             if (symbols.get(i).hasColor(color)) {
                 current = i;
+                selected();
                 return true;
             }
         }
@@ -115,6 +179,7 @@ public class Wheel {
         for (Symbol s : symbols) {
             s.makeInvisible();
         }
+        mark.makeInvisible();
     }
 
     /**
@@ -134,6 +199,8 @@ public class Wheel {
      */
     public void spin() {
         current = RANDOM.nextInt(symbols.size());
+        selected();
+        wearOut();
     }
 
     //  MC4
@@ -168,8 +235,13 @@ public class Wheel {
             Symbol s = symbols.get(current);
             s.changeSize(size);
             s.moveTo(x, y);
-            s.makeVisible();
+            if (s.isShown()) {
+                s.makeVisible();
+            }
         }
+        mark.changeSize(MARK_HEIGHT, size);
+        mark.moveTo(x, y + size + MARK_GAP);
+        mark.makeVisible();
     }
 
 
@@ -228,6 +300,43 @@ public class Wheel {
         }
         int n = symbols.size();
         current = ((current + steps) % n + n) % n;
+        selected();
+        wearOut();
+    }
+
+
+    // MC20: avisos a los simbolos
+
+    /**
+     * Le avisa al simbolo visible que quedo seleccionado.
+     */
+    protected void selected() {
+        if (!symbols.isEmpty()) {
+            symbols.get(current).onSelected();
+        }
+    }
+
+    /**
+     * Le avisa a todos los simbolos de la rueda que hubo un giro.
+     */
+    protected void wearOut() {
+        for (Symbol s : symbols) {
+            s.onSpin();
+        }
+    }
+
+    /**
+     * Retorna el tipo del simbolo visible, o null si la rueda esta vacia.
+     */
+    public String currentType() {
+        return symbols.isEmpty() ? null : symbols.get(current).type();
+    }
+
+    /**
+     * Retorna el simbolo visible, o null si la rueda esta vacia.
+     */
+    public Symbol currentSymbol() {
+        return symbols.isEmpty() ? null : symbols.get(current);
     }
 
 }

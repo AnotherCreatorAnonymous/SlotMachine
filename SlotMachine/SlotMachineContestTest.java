@@ -43,7 +43,7 @@ public class SlotMachineContestTest {
     }
 
     /**
-     * Deberia llegar al jackpot en la maquina mas pequena del enunciado.
+     * Deberia llegar al jackpot en la maquina mas pequeña del enunciado.
      */
     @Test
     public void shouldReachTheJackpotWithThreeWheels() {

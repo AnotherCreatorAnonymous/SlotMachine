@@ -1,0 +1,31 @@
+/**
+ * Rueda espejo: el tipo nuevo que proponemos. Gira siempre en sentido
+ * contrario al que le piden. En lo demas se comporta como una normal.
+ *
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 4.0
+ */
+public class MirrorWheel extends Wheel {
+
+    /** 
+     * Construye una rueda espejo sin simbolos. 
+     */
+    public MirrorWheel() {
+        super();
+    }
+
+    @Override
+    public String type() {
+        return "mirror";
+    }
+
+    @Override
+    protected String markColor() {
+        return "gold";
+    }
+
+    @Override
+    public void rotate(int steps) {
+        super.rotate(-steps);
+    }
+}
