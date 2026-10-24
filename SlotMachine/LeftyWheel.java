@@ -40,6 +40,11 @@ public class LeftyWheel extends Wheel {
         }
     }
 
+    @Override
+    public boolean sync() {
+        return copyLeft();
+    }
+
     private boolean copyLeft() {
         Wheel neighbour = leftWheel();
         if (neighbour == null) {

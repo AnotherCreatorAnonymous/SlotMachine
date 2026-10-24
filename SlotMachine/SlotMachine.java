@@ -589,6 +589,16 @@ public class SlotMachine {
     }
 
     /**
+     *  Recorre las ruedas de izquierda a derecha y deja que cada una se
+     *  ajuste a su vecina. Las que no dependen de la vecina no se mueven.
+     */
+    private void follow() {
+        for (Wheel w : wheels) {
+            w.sync();
+        }
+    }
+
+    /**
      *  Vuelve a enlazar cada rueda con la que le queda a la izquierda.
      *  Se llama cada vez que cambia el orden o la cantidad de ruedas,
      *  porque las ruedas zurdas dependen de su vecina.

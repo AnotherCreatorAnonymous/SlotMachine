@@ -24,6 +24,16 @@ public class Wheel {
     private Rectangle mark;
 
     /**
+     * Vuelve a ajustar esta rueda a su vecina de la izquierda, si su tipo
+     * depende de ella. Por defecto no hace nada.
+     *
+     * @return true si la rueda cambio de simbolo.
+     */
+    public boolean sync() {
+        return false;
+    }
+
+    /**
      * Construye una rueda sin simbolos y con una posicion visible inicial.
      */
     protected Wheel() {
