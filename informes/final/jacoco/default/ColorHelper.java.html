@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ColorHelper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SlotMachine</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">ColorHelper.java</span></div><h1>ColorHelper.java</h1><pre class="source lang-java linenums">import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Utilidad para resolver nombres de colores (estándar CSS) a objetos Color.
+ * Cumple el requisito de extensibilidad: agregar un color nuevo solo
+ * requiere agregar una entrada al mapa, sin modificar el método que lo usa.
+ */
+<span class="nc" id="L10">public class ColorHelper {</span>
+
+    /** Mapa estático que asocia nombres de color CSS con objetos Color. */
+<span class="fc" id="L13">    private static final Map&lt;String, Color&gt; CSS_COLORS = new HashMap&lt;&gt;();</span>
+
+    static {
+<span class="fc" id="L16">        CSS_COLORS.put(&quot;red&quot;, Color.red);</span>
+<span class="fc" id="L17">        CSS_COLORS.put(&quot;black&quot;, Color.black);</span>
+<span class="fc" id="L18">        CSS_COLORS.put(&quot;blue&quot;, Color.blue);</span>
+<span class="fc" id="L19">        CSS_COLORS.put(&quot;yellow&quot;, Color.yellow);</span>
+<span class="fc" id="L20">        CSS_COLORS.put(&quot;green&quot;, Color.green);</span>
+<span class="fc" id="L21">        CSS_COLORS.put(&quot;magenta&quot;, Color.magenta);</span>
+<span class="fc" id="L22">        CSS_COLORS.put(&quot;white&quot;, Color.white);</span>
+<span class="fc" id="L23">        CSS_COLORS.put(&quot;cyan&quot;, Color.cyan);</span>
+<span class="fc" id="L24">        CSS_COLORS.put(&quot;orange&quot;, Color.orange);</span>
+<span class="fc" id="L25">        CSS_COLORS.put(&quot;gray&quot;, Color.gray);</span>
+<span class="fc" id="L26">        CSS_COLORS.put(&quot;darkGray&quot;, Color.darkGray);</span>
+<span class="fc" id="L27">        CSS_COLORS.put(&quot;lightGray&quot;, Color.lightGray);</span>
+<span class="fc" id="L28">        CSS_COLORS.put(&quot;pink&quot;, Color.pink);</span>
+<span class="fc" id="L29">        CSS_COLORS.put(&quot;sandybrown&quot;, new Color(244, 164, 96));</span>
+<span class="fc" id="L30">        CSS_COLORS.put(&quot;brown&quot;, new Color(139, 69, 19));</span>
+<span class="fc" id="L31">        CSS_COLORS.put(&quot;purple&quot;, new Color(128, 0, 128));</span>
+<span class="fc" id="L32">        CSS_COLORS.put(&quot;navy&quot;, new Color(0, 0, 128));</span>
+<span class="fc" id="L33">        CSS_COLORS.put(&quot;olive&quot;, new Color(128, 128, 0));</span>
+<span class="fc" id="L34">        CSS_COLORS.put(&quot;teal&quot;, new Color(0, 128, 128));</span>
+<span class="fc" id="L35">        CSS_COLORS.put(&quot;maroon&quot;, new Color(128, 0, 0));</span>
+<span class="fc" id="L36">        CSS_COLORS.put(&quot;gold&quot;, new Color(255, 215, 0));</span>
+<span class="fc" id="L37">        CSS_COLORS.put(&quot;salmon&quot;, new Color(250, 128, 114));</span>
+<span class="fc" id="L38">        CSS_COLORS.put(&quot;violet&quot;, new Color(238, 130, 238));</span>
+<span class="fc" id="L39">        CSS_COLORS.put(&quot;indigo&quot;, new Color(75, 0, 130));</span>
+<span class="fc" id="L40">        CSS_COLORS.put(&quot;turquoise&quot;, new Color(64, 224, 208));</span>
+<span class="fc" id="L41">        CSS_COLORS.put(&quot;lime&quot;, new Color(0, 255, 0));</span>
+<span class="fc" id="L42">        CSS_COLORS.put(&quot;orchid&quot;, new Color(218, 112, 214));</span>
+<span class="fc" id="L43">        CSS_COLORS.put(&quot;crimson&quot;, new Color(220, 20, 60));</span>
+<span class="fc" id="L44">        CSS_COLORS.put(&quot;coral&quot;, new Color(255, 127, 80));</span>
+<span class="fc" id="L45">        CSS_COLORS.put(&quot;khaki&quot;, new Color(240, 230, 140));</span>
+<span class="fc" id="L46">        CSS_COLORS.put(&quot;lavender&quot;, new Color(230, 230, 250));</span>
+<span class="fc" id="L47">        CSS_COLORS.put(&quot;beige&quot;, new Color(245, 245, 220));</span>
+<span class="fc" id="L48">        CSS_COLORS.put(&quot;azure&quot;, new Color(240, 255, 255));</span>
+<span class="fc" id="L49">        CSS_COLORS.put(&quot;chartreuse&quot;, new Color(127, 255, 0));</span>
+<span class="fc" id="L50">        CSS_COLORS.put(&quot;peru&quot;, new Color(205, 133, 63));</span>
+<span class="fc" id="L51">        CSS_COLORS.put(&quot;slateGray&quot;, new Color(112, 128, 144));</span>
+<span class="fc" id="L52">        CSS_COLORS.put(&quot;seagreen&quot;, new Color(46, 139, 87));</span>
+<span class="fc" id="L53">        CSS_COLORS.put(&quot;tomato&quot;, new Color(255, 99, 71));</span>
+<span class="fc" id="L54">        CSS_COLORS.put(&quot;deepPink&quot;, new Color(255, 20, 147));</span>
+<span class="fc" id="L55">        CSS_COLORS.put(&quot;forestGreen&quot;, new Color(34, 139, 34));</span>
+<span class="fc" id="L56">        CSS_COLORS.put(&quot;midnightBlue&quot;, new Color(25, 25, 112));</span>
+<span class="fc" id="L57">        CSS_COLORS.put(&quot;rosyBrown&quot;, new Color(188, 143, 143));</span>
+<span class="fc" id="L58">        CSS_COLORS.put(&quot;firebrick&quot;, new Color(178, 34, 34));</span>
+<span class="fc" id="L59">        CSS_COLORS.put(&quot;dodgerBlue&quot;, new Color(30, 144, 255));</span>
+<span class="fc" id="L60">        CSS_COLORS.put(&quot;sienna&quot;, new Color(160, 82, 45));</span>
+<span class="fc" id="L61">        CSS_COLORS.put(&quot;plum&quot;, new Color(221, 160, 221));</span>
+<span class="fc" id="L62">        CSS_COLORS.put(&quot;lightCoral&quot;, new Color(240, 128, 128));</span>
+<span class="fc" id="L63">        CSS_COLORS.put(&quot;mediumSeaGreen&quot;, new Color(60, 179, 113));</span>
+<span class="fc" id="L64">        CSS_COLORS.put(&quot;steelBlue&quot;, new Color(70, 130, 180));</span>
+<span class="fc" id="L65">        CSS_COLORS.put(&quot;deepSkyBlue&quot;, new Color(0, 191, 255));</span>
+<span class="fc" id="L66">        CSS_COLORS.put(&quot;springGreen&quot;, new Color(0, 255, 127));</span>
+<span class="fc" id="L67">        CSS_COLORS.put(&quot;goldenRod&quot;, new Color(218, 165, 32));</span>
+    }
+
+    /**
+     * Retorna el objeto Color asociado a un nombre de color CSS.
+     * Si el nombre no existe en el mapa, retorna Color.black por defecto.
+     *
+     * @param colorString nombre del color en formato CSS.
+     * @return el objeto Color correspondiente, o Color.black si no se encuentra.
+     */
+    public static Color resolve(String colorString) {
+<span class="fc" id="L78">        return CSS_COLORS.getOrDefault(colorString, Color.black);</span>
+    }
+
+    /**
+     * Permite registrar o sobrescribir un color en tiempo de ejecución,
+     * sin necesidad de modificar esta clase (extensibilidad real).
+     *
+     * @param name  nombre del color.
+     * @param color objeto Color asociado.
+     */
+    public static void register(String name, Color color) {
+<span class="fc" id="L89">        CSS_COLORS.put(name, color);</span>
+<span class="fc" id="L90">    }</span>
+
+    /**
+     * Orden fijo en el que se reparten los colores cuando se necesita una
+     * cantidad dada de simbolos distintos. Se excluyen &quot;white&quot;, que no se
+     * distingue del fondo del lienzo, y &quot;darkGray&quot;, que usa la carcasa.
+     */
+<span class="fc" id="L97">    private static final String[] PALETTE = {</span>
+        &quot;red&quot;, &quot;blue&quot;, &quot;green&quot;, &quot;yellow&quot;, &quot;magenta&quot;, &quot;cyan&quot;, &quot;orange&quot;, &quot;pink&quot;,
+        &quot;purple&quot;, &quot;navy&quot;, &quot;olive&quot;, &quot;teal&quot;, &quot;maroon&quot;, &quot;gold&quot;, &quot;salmon&quot;, &quot;violet&quot;,
+        &quot;indigo&quot;, &quot;turquoise&quot;, &quot;lime&quot;, &quot;orchid&quot;, &quot;crimson&quot;, &quot;coral&quot;, &quot;khaki&quot;,
+        &quot;lavender&quot;, &quot;beige&quot;, &quot;azure&quot;, &quot;chartreuse&quot;, &quot;peru&quot;, &quot;slateGray&quot;,
+        &quot;seagreen&quot;, &quot;tomato&quot;, &quot;deepPink&quot;, &quot;forestGreen&quot;, &quot;midnightBlue&quot;,
+        &quot;rosyBrown&quot;, &quot;firebrick&quot;, &quot;dodgerBlue&quot;, &quot;sienna&quot;, &quot;plum&quot;, &quot;lightCoral&quot;,
+        &quot;mediumSeaGreen&quot;, &quot;steelBlue&quot;, &quot;deepSkyBlue&quot;, &quot;springGreen&quot;, &quot;goldenRod&quot;,
+        &quot;brown&quot;, &quot;sandybrown&quot;, &quot;gray&quot;, &quot;lightGray&quot;, &quot;black&quot;
+    };
+
+    /**
+     * Retorna n nombres de color distintos. Si se piden mas colores de los que
+     * tiene la paleta, se generan y se registran los que falten, de modo que la
+     * maquina no queda limitada por el tamaño de la paleta.
+     *
+     * @param n cantidad de colores distintos requeridos.
+     * @return arreglo con n nombres de color distintos.
+     */
+    public static String[] palette(int n) {
+<span class="fc" id="L117">        int total = Math.max(0, n);</span>
+<span class="fc" id="L118">        String[] result = new String[total];</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        for (int i = 0; i &lt; total; i++) {</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">            if (i &lt; PALETTE.length) {</span>
+<span class="fc" id="L121">                result[i] = PALETTE[i];</span>
+            } else {
+<span class="fc" id="L123">                result[i] = &quot;extra&quot; + i;</span>
+<span class="fc" id="L124">                register(result[i], generate(i));</span>
+            }
+        }
+<span class="fc" id="L127">        return result;</span>
+    }
+
+    /**
+     * Indica cuantos colores trae la paleta base.
+     */
+    public static int paletteSize() {
+<span class="fc" id="L134">        return PALETTE.length;</span>
+    }
+
+    /**
+     * Construye un color distinto de los anteriores repartiendo el circulo de
+     * tonos, para poder atender paletas mas grandes que la base.
+     */
+    private static Color generate(int index) {
+<span class="fc" id="L142">        float hue = (index * 0.618033f) % 1.0f;</span>
+<span class="fc" id="L143">        return Color.getHSBColor(hue, 0.75f, 0.85f);</span>
+    }
+    
+    /**
+     * Indica si un nombre de color CSS es conocido por el sistema.
+     * @param name
+     * @return
+     */
+    public static boolean isKnown(String name) {
+<span class="fc" id="L152">    return CSS_COLORS.containsKey(name);</span>
+}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

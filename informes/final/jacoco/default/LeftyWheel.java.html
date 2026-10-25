@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LeftyWheel.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SlotMachine</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">LeftyWheel.java</span></div><h1>LeftyWheel.java</h1><pre class="source lang-java linenums">/**
+ * Rueda zurda: si tiene vecina a la izquierda, al girar copia su estado.
+ * Si no tiene vecina o el color de la vecina no existe en esta rueda,
+ * gira como una normal.
+ *
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 4.0
+ */
+public class LeftyWheel extends Wheel {
+
+    public LeftyWheel() {
+<span class="fc" id="L12">        super();</span>
+<span class="fc" id="L13">    }</span>
+
+    @Override
+    public String type() {
+<span class="nc" id="L17">        return &quot;lefty&quot;;</span>
+    }
+
+    @Override
+    protected String markColor() {
+<span class="fc" id="L22">        return &quot;dodgerBlue&quot;;</span>
+    }
+
+    @Override
+    public void rotate(int steps) {
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if (copyLeft()) {</span>
+<span class="fc" id="L28">            wearOut();</span>
+        } else {
+<span class="fc" id="L30">            super.rotate(steps);</span>
+        }
+<span class="fc" id="L32">    }</span>
+
+    @Override
+    public void spin() {
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">        if (copyLeft()) {</span>
+<span class="fc" id="L37">            wearOut();</span>
+        } else {
+<span class="nc" id="L39">            super.spin();</span>
+        }
+<span class="fc" id="L41">    }</span>
+
+    /**
+     * Copia el simbolo de la vecina izquierda si cambio. Una rueda bloqueada
+     * no se mueve, y si ya muestra el mismo color no vuelve a seleccionarlo.
+     */
+    @Override
+    public boolean sync() {
+<span class="fc" id="L49">        Wheel neighbour = leftWheel();</span>
+<span class="pc bpc" id="L50" title="1 of 4 branches missed.">        if (isLocked() || neighbour == null) {</span>
+<span class="fc" id="L51">            return false;</span>
+        }
+<span class="fc" id="L53">        String color = neighbour.currentColor();</span>
+<span class="fc bfc" id="L54" title="All 4 branches covered.">        if (color == null || color.equals(currentColor())) {</span>
+<span class="fc" id="L55">            return false;</span>
+        }
+<span class="fc" id="L57">        return setCurrentByColor(color);</span>
+    }
+
+    private boolean copyLeft() {
+<span class="fc" id="L61">        Wheel neighbour = leftWheel();</span>
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (neighbour == null) {</span>
+<span class="fc" id="L63">            return false;</span>
+        }
+<span class="fc" id="L65">        String color = neighbour.currentColor();</span>
+<span class="pc bpc" id="L66" title="2 of 4 branches missed.">        return color != null &amp;&amp; setCurrentByColor(color);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

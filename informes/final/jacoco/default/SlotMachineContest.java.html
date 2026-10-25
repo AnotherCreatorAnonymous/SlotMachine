@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SlotMachineContest.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SlotMachine</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">SlotMachineContest.java</span></div><h1>SlotMachineContest.java</h1><pre class="source lang-java linenums">import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Resuelve el problema de la maraton sobre una SlotMachine de n ruedas y n simbolos.
+ *
+ * La estrategia se llama radar diferencial. La rueda 1 se usa como antena: al
+ * recorrerla por todas sus posiciones, el numero de simbolos distintos sube
+ * exactamente en las posiciones que ninguna otra rueda esta ocupando, asi que
+ * un barrido completo de la rueda 1 devuelve el mapa de ocupacion de las demas.
+ * Despues, para ubicar una rueda concreta se le da un paso y se repite el
+ * barrido: la unica casilla del mapa que cambia es la que esa rueda toco, y eso
+ * la identifica sin ambiguedad. Conocida su posicion se lleva de un solo giro a
+ * la casilla de la rueda 1.
+ *
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 3.0
+ */
+<span class="nc" id="L19">public class SlotMachineContest {</span>
+
+    /**
+     * Resuelve una maquina de n ruedas y n simbolos sin mostrarla.
+     * Cada accion es un par {rueda, pasos}.
+     *
+     * @param n cantidad de ruedas y de simbolos.
+     * @return secuencia de acciones que llevan la maquina al jackpot.
+     */
+    public static int[][] solve(int n) {
+<span class="fc" id="L29">        SlotMachine machine = new SlotMachine(n);</span>
+<span class="fc" id="L30">        machine.makeInvisible();</span>
+<span class="fc" id="L31">        return play(machine, n);</span>
+    }
+
+    /**
+     * Resuelve la maquina mostrandola, para ver como se llega al jackpot.
+     *
+     * @param n cantidad de ruedas y de simbolos.
+     */
+    public static void simulate(int n) {
+<span class="fc" id="L40">        SlotMachine machine = new SlotMachine(n);</span>
+<span class="fc" id="L41">        machine.makeVisible();</span>
+<span class="fc" id="L42">        play(machine, n);</span>
+<span class="fc" id="L43">    }</span>
+
+    // Algoritmo de solución 
+
+    /**
+     * Toma el mapa inicial con la antena y luego ubica y recoge una por una
+     * las ruedas 2..n sobre la casilla de la rueda 1.
+     */
+    private static int[][] play(SlotMachine machine, int n) {
+<span class="fc" id="L52">        List&lt;int[]&gt; log = new ArrayList&lt;int[]&gt;();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (n &lt; 2) {</span>
+<span class="fc" id="L54">            return toArray(log);</span>
+        }
+<span class="fc" id="L56">        boolean[] map = radar(machine, n, log);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        for (int wheel = 2; wheel &lt;= n; wheel++) {</span>
+<span class="fc" id="L58">            map = collect(machine, n, log, wheel, map);</span>
+        }
+<span class="fc" id="L60">        return toArray(log);</span>
+    }
+
+    /**
+     * Barrido de la antena. Recorre la rueda 1 por sus n posiciones, anota
+     * cuantos simbolos distintos se ven en cada una y la devuelve a su lugar.
+     * El conteo es minimo en las casillas ocupadas por las ruedas 2..n y una
+     * unidad mayor en las casillas libres.
+     *
+     * @return mapa de ocupacion de las ruedas 2..n, medido desde la rueda 1.
+     */
+    private static boolean[] radar(SlotMachine machine, int n, List&lt;int[]&gt; log) {
+<span class="fc" id="L72">        int[] seen = new int[n];</span>
+<span class="fc" id="L73">        seen[0] = machine.distinctSymbols();</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        for (int step = 1; step &lt; n; step++) {</span>
+<span class="fc" id="L75">            rotate(machine, log, 1, 1);</span>
+<span class="fc" id="L76">            seen[step] = machine.distinctSymbols();</span>
+        }
+<span class="fc" id="L78">        rotate(machine, log, 1, 1);</span>
+
+<span class="fc" id="L80">        int floor = seen[0];</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        for (int step = 1; step &lt; n; step++) {</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">            if (seen[step] &lt; floor) {</span>
+<span class="fc" id="L83">                floor = seen[step];</span>
+            }
+        }
+<span class="fc" id="L86">        boolean[] map = new boolean[n];</span>
+<span class="fc bfc" id="L87" title="All 2 branches covered.">        for (int step = 0; step &lt; n; step++) {</span>
+<span class="fc bfc" id="L88" title="All 2 branches covered.">            map[step] = seen[step] == floor;</span>
+        }
+<span class="fc" id="L90">        return map;</span>
+    }
+
+    /**
+     * Ubica una rueda y la lleva a la casilla de la rueda 1.
+     * Le da pasos de a uno y repite el barrido hasta que el mapa cambie:
+     * la casilla que aparece es donde quedo la rueda y la que desaparece es
+     * de donde salio, y cualquiera de las dos la identifica.
+     *
+     * @return el mapa de ocupacion ya actualizado.
+     */
+    private static boolean[] collect(SlotMachine machine, int n, List&lt;int[]&gt; log,
+                                     int wheel, boolean[] map) {
+<span class="fc" id="L103">        boolean[] before = map;</span>
+<span class="fc" id="L104">        int here = -1;</span>
+<span class="fc" id="L105">        boolean lonely = false;</span>
+
+<span class="pc bpc" id="L107" title="1 of 4 branches missed.">        for (int attempt = 0; attempt &lt; n &amp;&amp; here &lt; 0; attempt++) {</span>
+<span class="fc" id="L108">            rotate(machine, log, wheel, 1);</span>
+<span class="fc" id="L109">            boolean[] after = radar(machine, n, log);</span>
+<span class="fc" id="L110">            int arrived = -1;</span>
+<span class="fc" id="L111">            int left = -1;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            for (int step = 0; step &lt; n; step++) {</span>
+<span class="fc bfc" id="L113" title="All 4 branches covered.">                if (!before[step] &amp;&amp; after[step]) {</span>
+<span class="fc" id="L114">                    arrived = step;</span>
+                }
+<span class="fc bfc" id="L116" title="All 4 branches covered.">                if (before[step] &amp;&amp; !after[step]) {</span>
+<span class="fc" id="L117">                    left = step;</span>
+                }
+            }
+<span class="fc bfc" id="L120" title="All 2 branches covered.">            if (arrived &gt;= 0) {</span>
+<span class="fc" id="L121">                here = arrived;</span>
+<span class="fc" id="L122">                lonely = true;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">            } else if (left &gt;= 0) {</span>
+<span class="fc" id="L124">                here = (left + 1) % n;</span>
+<span class="fc" id="L125">                lonely = false;</span>
+            }
+<span class="fc" id="L127">            before = after;</span>
+        }
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">        if (here &lt; 0) {</span>
+<span class="nc" id="L130">            return before;</span>
+        }
+
+<span class="fc" id="L133">        rotate(machine, log, wheel, shortest(n - here, n));</span>
+
+<span class="fc" id="L135">        boolean[] next = new boolean[n];</span>
+<span class="fc bfc" id="L136" title="All 2 branches covered.">        for (int step = 0; step &lt; n; step++) {</span>
+<span class="fc" id="L137">            next[step] = before[step];</span>
+        }
+<span class="fc bfc" id="L139" title="All 2 branches covered.">        if (lonely) {</span>
+<span class="fc" id="L140">            next[here] = false;</span>
+        }
+<span class="fc" id="L142">        next[0] = true;</span>
+<span class="fc" id="L143">        return next;</span>
+    }
+
+    // helpers privados para la solución del algoritma
+
+    /**
+     * Traduce un giro a la vuelta equivalente mas corta, para que la maquina
+     * gire por el lado que menos pasos necesita.
+     */
+    private static int shortest(int steps, int n) {
+<span class="fc" id="L153">        int value = ((steps % n) + n) % n;</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        return value &gt; n / 2 ? value - n : value;</span>
+    }
+
+    /**
+     * Gira una rueda y registra la accion. Los giros de cero pasos no cuentan.
+     */
+    private static void rotate(SlotMachine machine, List&lt;int[]&gt; log, int wheel, int steps) {
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        if (steps == 0) {</span>
+<span class="fc" id="L162">            return;</span>
+        }
+<span class="fc" id="L164">        machine.spin(wheel, steps);</span>
+<span class="fc" id="L165">        log.add(new int[]{wheel, steps});</span>
+<span class="fc" id="L166">    }</span>
+
+    /**
+     * Convierte la bitacora de acciones en el arreglo que exige el enunciado.
+     */
+    private static int[][] toArray(List&lt;int[]&gt; log) {
+<span class="fc" id="L172">        int[][] actions = new int[log.size()][];</span>
+<span class="fc bfc" id="L173" title="All 2 branches covered.">        for (int i = 0; i &lt; log.size(); i++) {</span>
+<span class="fc" id="L174">            actions[i] = log.get(i);</span>
+        }
+<span class="fc" id="L176">        return actions;</span>
+    }
+    
+    // metodo usado para las pruebas de unidad
+    /**
+     * Resuelve una maquina ya construida. Sirve para las pruebas de unidad,
+     * que necesitan revisar el estado final de la maquina.
+     *
+     * @param machine maquina de n ruedas y n simbolos.
+     * @param n cantidad de ruedas y de simbolos.
+     * @return secuencia de acciones que llevan la maquina al jackpot.
+     */
+    public static int[][] solve(SlotMachine machine, int n) {
+<span class="fc" id="L189">        return play(machine, n);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
