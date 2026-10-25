@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Symbol.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">SlotMachine</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Symbol.java</span></div><h1>Symbol.java</h1><pre class="source lang-java linenums">/**
+ * Representa un simbolo de la maquina tragamonedas.
+ * Cada simbolo se identifica por un color y tiene una figura visual.
+ *
+ * @author Carlos Jimenez y Alejandro Ospina
+ * @version 4.0
+ */
+public class Symbol {
+    private String color;
+    private Circle shape;
+
+    /**
+     * Construye un simbolo en una posicion inicial.
+     *
+     * @param color color CSS del simbolo.
+     * @param x posicion horizontal.
+     * @param y posicion vertical.
+     */
+<span class="fc" id="L19">    protected Symbol(String color, int x, int y) {</span>
+<span class="fc" id="L20">        this.color = color;</span>
+<span class="fc" id="L21">        shape = new Circle();</span>
+<span class="fc" id="L22">        shape.changeColor(color);</span>
+<span class="fc" id="L23">        shape.moveTo(x, y);</span>
+<span class="fc" id="L24">    }</span>
+
+    // MC20, lo que cada tipo de simbolo puede cambiar
+
+    /**
+     * Retorna el nombre del tipo de simbolo.
+     */
+    public String type() {
+<span class="nc" id="L32">        return &quot;normal&quot;;</span>
+    }
+
+    /**
+     * Se invoca cada vez que gira la rueda que contiene este simbolo.
+     * Por defecto no hace nada.
+     */
+    public void onSpin() {
+<span class="fc" id="L40">    }</span>
+
+    /**
+     * Se invoca cada vez que este simbolo queda seleccionado en su rueda.
+     * Por defecto no hace nada.
+     */
+    public void onSelected() {
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Indica si el simbolo debe dibujarse cuando esta seleccionado.
+     * Por defecto siempre se dibuja.
+     */
+    public boolean isShown() {
+<span class="nc" id="L54">        return true;</span>
+    }
+
+    /**
+     * Ajusta el tamaño que pide la maquina al tamaño propio del simbolo.
+     * Por defecto se respeta el tamaño pedido.
+     *
+     * @param size tamaño que pide la maquina.
+     * @return tamaño con el que realmente se dibuja.
+     */
+    protected int scaled(int size) {
+<span class="nc" id="L65">        return size;</span>
+    }
+
+    /**
+     * Retorna el color del simbolo.
+     *
+     * @return color CSS del simbolo.
+     */
+    public String getColor() {
+<span class="fc" id="L74">        return color;</span>
+    }
+
+    /**
+     * Cambia el color del simbolo.
+     *
+     * @param color nuevo color CSS.
+     */
+    public void changeColor(String color) {
+<span class="nc" id="L83">        this.color = color;</span>
+<span class="nc" id="L84">        shape.changeColor(color);</span>
+<span class="nc" id="L85">    }</span>
+
+    /**
+     * Mueve el simbolo a una posicion absoluta.
+     *
+     * @param x nueva posicion horizontal.
+     * @param y nueva posicion vertical.
+     */
+    public void moveTo(int x, int y) {
+<span class="nc" id="L94">        shape.moveTo(x, y);</span>
+<span class="nc" id="L95">    }</span>
+
+    /**
+     * Hace visible el simbolo.
+     */
+    public void makeVisible() {
+<span class="nc" id="L101">        shape.makeVisible();</span>
+<span class="nc" id="L102">    }</span>
+
+    /**
+     * Hace invisible el simbolo.
+     */
+    public void makeInvisible() {
+<span class="fc" id="L108">        shape.makeInvisible();</span>
+<span class="fc" id="L109">    }</span>
+
+    /**
+     * Indica si este simbolo tiene el color indicado.
+     *
+     * @param color color que se desea comparar.
+     * @return true si los colores son iguales.
+     */
+    public boolean hasColor(String color) {
+<span class="fc" id="L118">        return this.color.equals(color);</span>
+    }
+
+    /**
+     * Cambia el tamaño del simbolo.
+     *
+     * @param diameter nuevo diametro del simbolo.
+     */
+    public void changeSize(int diameter) {
+<span class="nc" id="L127">        shape.changeSize(scaled(diameter));</span>
+<span class="nc" id="L128">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
