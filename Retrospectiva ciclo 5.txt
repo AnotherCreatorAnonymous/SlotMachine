@@ -1,0 +1,23 @@
+RETROSPECTIVA — CICLO 5 
+¿Qué funcionó bien?
+La migración de BlueJ a VS Code con Maven fue limpia: se movieron las clases a src/main/java y las pruebas a src/test/java sin cambiar código, y el pom.xml dejó automatizadas las dos metas del ciclo. "mvn clean verify" falla si el cubrimiento de JaCoCo baja de 75 % o si queda una violación de PMD de prioridad 1. Medir primero y corregir después permitió reportar con precisión el resultado inicial (61.4 % de cubrimiento y 6 violaciones rojas) y el final (92.2 % y 0 violaciones de prioridad 1 y 2. Las 61 pruebas que ya existían sirvieron de red de seguridad: después de cada cambio se volvieron a correr todas.
+
+¿Qué no funcionó bien?
+El cubrimiento inicial estaba bajo por deuda acumulada y no por falta de pruebas del ciclo 4: las clases Figure, CircleFigure, SquareFigure, TriangleFigure y Triangle llevaban un ciclo sin usarse, faltaban las pruebas de los ciclos 1 y 3 y ninguna prueba usaba el modo visible. También se encontró que el arreglo de LeftyWheel del ciclo 4 había quedado a medias: existían sync() y follow(), pero nadie llamaba a follow(), así que la rueda zurda no reaccionaba cuando su vecina cambiaba. Por último, el cubrimiento depende de la prueba visible: sin pantalla baja a 74.1 %.
+
+¿Qué se aprendió?
+Que las herramientas de análisis señalan problemas reales de diseño y no solo de estilo. ConstructorCallsOverridableMethod mostró que Wheel llamaba al gancho markColor() desde su constructor, antes de que la subclase estuviera construida. El reporte de JaCoCo hizo evidente el código muerto que la retrospectiva anterior había dejado como decisión pendiente. También se aprendió a separar las metas (prioridad 1) de las recomendaciones de estilo (prioridades 3 y 4), y a documentar por qué estas últimas se dejan.
+
+¿Cuanto tiempo se invirtio cada uno?
+Carlos Jimenez: 10 horas
+Alejandro Ospina:10 horas
+
+¿Qué se hará distinto?
+Tomar las decisiones de diseño pendientes en el mismo ciclo en que aparecen, en lugar de dejar código sin uso para después. Correr JaCoCo y PMD desde el comienzo de cada ciclo y no solo al final. Escribir pruebas para cada operación que pueda afectar a otras ruedas (como la vecindad de la rueda zurda) en el mismo mini-ciclo en que se implementa.
+
+Estado en términos de los mini-ciclos planificados
+Ciclo 1: MC1 a MC7 completados.
+Ciclo 2: MC8 a MC12 completados.
+Ciclo 3: MC13 a MC18 completados.
+Ciclo 4: MC19 a MC24 completados.
+Ciclo 5: MC25 a MC30 completados.
