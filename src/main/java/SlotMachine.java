@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
  * @author Carlos Jimenez y Alejandro Ospina
  * @version 2.0
  */
-public class SlotMachine {
+public final class SlotMachine {
     // MC1
     private static final int START_X = 50;
     private static final int Y = 100;

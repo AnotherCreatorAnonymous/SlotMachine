@@ -43,7 +43,6 @@ public class Wheel {
         locked = false;
         left = null;
         mark = new Rectangle();
-        mark.changeColor(markColor());
     }
 
 
@@ -252,6 +251,8 @@ public class Wheel {
                 s.makeVisible();
             }
         }
+        // markColor() es un gancho de las subclases: no se llama desde el constructor
+        mark.changeColor(markColor());
         mark.changeSize(MARK_HEIGHT, size);
         mark.moveTo(x, y + size + MARK_GAP);
         mark.makeVisible();

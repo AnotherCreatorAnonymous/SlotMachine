@@ -112,16 +112,10 @@ public class Rectangle{
      * @param distance the desired distance in pixels
      */
     public void slowMoveHorizontal(int distance){
-        int delta;
+        int delta = distance < 0 ? -1 : 1;
+        int steps = Math.abs(distance);
 
-        if(distance < 0) {
-            delta = -1;
-            distance = -distance;
-        } else {
-            delta = 1;
-        }
-
-        for(int i = 0; i < distance; i++){
+        for(int i = 0; i < steps; i++){
             xPosition += delta;
             draw();
         }
@@ -132,16 +126,10 @@ public class Rectangle{
      * @param distance the desired distance in pixels
      */
     public void slowMoveVertical(int distance){
-        int delta;
+        int delta = distance < 0 ? -1 : 1;
+        int steps = Math.abs(distance);
 
-        if(distance < 0) {
-            delta = -1;
-            distance = -distance;
-        } else {
-            delta = 1;
-        }
-
-        for(int i = 0; i < distance; i++){
+        for(int i = 0; i < steps; i++){
             yPosition += delta;
             draw();
         }
