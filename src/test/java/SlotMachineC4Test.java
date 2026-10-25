@@ -96,6 +96,159 @@ public class SlotMachineC4Test {
     }
 
     /**
+     * Una rueda lefty deberia seguir a su vecina cuando la vecina cambia de simbolo.
+     */
+    @Test
+    public void shouldFollowLeftNeighbourWhenItChangesSymbol() {
+        machine.addWheel("normal", 1);
+        populateWheel(1);
+        machine.addWheel("lefty", 2);
+        populateWheel(2);
+
+        machine.placeSymbol(1, "green");
+        assertEquals("green", machine.configuration()[1]);
+
+        machine.spin(1, 1);
+        assertTrue(machine.ok());
+        assertEquals("red", machine.configuration()[1]);
+        assertTrue(machine.isJackpot());
+    }
+
+    /**
+     * Un cambio en la primera rueda deberia propagarse por una cadena de ruedas lefty.
+     */
+    @Test
+    public void shouldPropagateAlongChainOfLeftyWheels() {
+        machine.addWheel("normal", 1);
+        machine.addWheel("lefty", 2);
+        machine.addWheel("lefty", 3);
+        for (int w = 1; w <= 3; w++) {
+            populateWheel(w);
+        }
+
+        machine.placeSymbol(1, "blue");
+
+        assertTrue(machine.ok());
+        assertEquals("blue", machine.configuration()[1]);
+        assertEquals("blue", machine.configuration()[2]);
+        assertTrue(machine.isJackpot());
+    }
+
+    /**
+     * Un simbolo puesto a mano en una rueda lefty deberia respetarse hasta que su vecina cambie.
+     */
+    @Test
+    public void shouldKeepSymbolPlacedOnLeftyWheel() {
+        machine.addWheel("normal", 1);
+        populateWheel(1);
+        machine.addWheel("lefty", 2);
+        populateWheel(2);
+
+        machine.placeSymbol(1, "green");
+        machine.placeSymbol(2, "red");
+
+        assertTrue(machine.ok());
+        assertEquals("red", machine.configuration()[1]);
+        assertFalse(machine.isJackpot());
+    }
+
+    /**
+     * Una rueda lefty bloqueada no deberia seguir a su vecina.
+     */
+    @Test
+    public void shouldNotFollowNeighbourWhenLeftyWheelIsLocked() {
+        machine.addWheel("normal", 1);
+        populateWheel(1);
+        machine.addWheel("lefty", 2);
+        populateWheel(2);
+
+        machine.placeSymbol(2, "red");
+        machine.lock(2);
+        machine.placeSymbol(1, "blue");
+
+        assertTrue(machine.ok());
+        assertEquals("red", machine.configuration()[1]);
+    }
+
+    /**
+     * Despues de un intercambio, una rueda lefty deberia copiar a su nueva vecina.
+     */
+    @Test
+    public void shouldFollowNewNeighbourAfterSwap() {
+        machine.addWheel("normal", 1);
+        machine.addWheel("normal", 2);
+        machine.addWheel("lefty", 3);
+        for (int w = 1; w <= 3; w++) {
+            populateWheel(w);
+        }
+        machine.spin(new String[]{"red", "blue", "green"});
+
+        machine.swap(1, 2);
+
+        assertTrue(machine.ok());
+        assertEquals("blue", machine.configuration()[0]);
+        assertEquals("red", machine.configuration()[2]);
+    }
+
+    /**
+     * Al eliminar la vecina de una rueda lefty, deberia copiar a la que queda a su izquierda.
+     */
+    @Test
+    public void shouldFollowNewNeighbourAfterDeletingWheel() {
+        machine.addWheel("normal", 1);
+        machine.addWheel("normal", 2);
+        machine.addWheel("lefty", 3);
+        for (int w = 1; w <= 3; w++) {
+            populateWheel(w);
+        }
+        machine.spin(new String[]{"red", "blue", "green"});
+
+        machine.delWheel(2);
+
+        assertTrue(machine.ok());
+        assertEquals(2, machine.configuration().length);
+        assertTrue(machine.isJackpot());
+    }
+
+    /**
+     * Una rueda lefty junto a una vecina vacia no cambia, y copia el primer simbolo que reciba la vecina.
+     */
+    @Test
+    public void shouldFollowInsertedNeighbourOnceItHasSymbols() {
+        machine.addWheel("normal", 1);
+        machine.addWheel("lefty", 2);
+        populateWheel(1);
+        populateWheel(2);
+        machine.spin(new String[]{"green", "red"});
+
+        machine.addWheel("normal", 2);
+        assertTrue(machine.ok());
+        assertEquals("red", machine.configuration()[2]);
+
+        machine.addSymbol(2, "blue");
+        assertTrue(machine.ok());
+        assertEquals("blue", machine.configuration()[2]);
+    }
+
+    /**
+     * Si al borrar un simbolo la vecina cambia de simbolo, la rueda lefty deberia seguirla.
+     */
+    @Test
+    public void shouldFollowNeighbourAfterDeletingItsSymbol() {
+        machine.addWheel("normal", 1);
+        machine.addWheel("lefty", 2);
+        populateWheel(1);
+        populateWheel(2);
+        machine.spin(new String[]{"green", "red"});
+
+        machine.delSymbol("green");
+
+        assertTrue(machine.ok());
+        assertEquals("blue", machine.configuration()[0]);
+        assertEquals("blue", machine.configuration()[1]);
+    }
+
+    /**
      * Una rueda rebelde no deberia dejarse bloquear y debe poder girar normalmente.
      */
     @Test

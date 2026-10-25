@@ -48,7 +48,7 @@ símbolos efímeros y tímidos), estructurados mediante ganchos y fábricas exte
 | `SlotMachine` | Fachada del simulador. Administra la colección de ruedas, reordena y controla el protocolo de errores y visibilidad. |
 | `Wheel` | Rueda base concreta con ganchos de comportamiento por defecto. Secuencia de símbolos, selección actual, bloqueo y vecindad. |
 | `NormalWheel` | Rueda estándar que gira de forma circular y acepta todas las operaciones. |
-| `LeftyWheel` | Rueda zurda que copia el símbolo de su vecina izquierda al girar; si no tiene vecina, gira como normal. |
+| `LeftyWheel` | Rueda zurda que copia el símbolo de su vecina izquierda al girar y la sigue cada vez que la vecina cambia; si no tiene vecina, gira como normal. |
 | `RebelWheel` | Rueda rebelde que rechaza bloqueo (`lock`), intercambio (`swap`) y eliminación (`delWheel`). |
 | `MirrorWheel` | Tipo propuesto (requisito 19); invierte el sentido de rotación respecto a los pasos solicitados. |
 | `WheelFactory` / `WheelMaker` | Fábrica extensible de ruedas basada en registro de creadores funcionales en un mapa dinámico. |
@@ -136,7 +136,7 @@ mini-ciclo dejara el simulador ejecutable y probado.
 
 - **Ruedas:**
   - `normal`: gira de forma circular y acepta todas las operaciones.
-  - `lefty`: si tiene vecina a la izquierda, al girar copia su estado/color; si no tiene vecina o no coincide el color, gira como una normal.
+  - `lefty`: si tiene vecina a la izquierda, al girar copia su estado/color; si no tiene vecina o no coincide el color, gira como una normal. Además sigue a su vecina: cuando la vecina cambia de símbolo (`spin`, `placeSymbol`, `delSymbol`, `addSymbol` sobre una rueda vacía) o cuando la zurda queda junto a otra vecina (`swap`, `addWheel`, `delWheel`), se reajusta, y el cambio se propaga por una cadena de zurdas. Un símbolo puesto a mano en la zurda (`placeSymbol`, `spin(String[])`) se respeta hasta que su vecina vuelva a cambiar, y una zurda bloqueada no se mueve.
   - `rebel`: no permite ser bloqueada (`lock`), intercambiada (`swap`), ni eliminada (`delWheel`).
   - `mirror`: tipo propuesto (requisito 19); invierte el sentido de giro solicitado (los pasos positivos giran en reversa).
 - **Símbolos:**
@@ -164,10 +164,10 @@ En `SlotMachineContest.collect`, la guarda contra bucles infinitos `if (here < 0
 | `SlotMachineCC2Test` | Pruebas de unidad compartidas del curso para el ciclo 2 (`accordingJcOm...`). | 4 |
 | `SlotMachineContestTest` | Pruebas de unidad del ciclo 3: solucionador, sensor visible, jackpot y límite de acciones. | 7 |
 | `SlotMachineContestCTest` | Pruebas de unidad compartidas del curso para el ciclo 3 (`accordingJcOm...`). | 2 |
-| `SlotMachineC4Test` | Pruebas de unidad del ciclo 4: creación y rechazo de tipos, comportamiento de ruedas zurdas, rebeldes y espejo, encogimiento de efímeros, alternancia de tímidos y fábricas. | 15 |
+| `SlotMachineC4Test` | Pruebas de unidad del ciclo 4: creación y rechazo de tipos, comportamiento de ruedas zurdas (incluido el seguimiento de su vecina), rebeldes y espejo, encogimiento de efímeros, alternancia de tímidos y fábricas. | 23 |
 | `SlotMachineCC4Test` | Pruebas de unidad compartidas del curso para el ciclo 4 (`accordingJcOm...`). | 4 |
 
-Todas las pruebas se ejecutan con la máquina en modo invisible (61 pruebas en total, 100% pasando).
+Todas las pruebas se ejecutan con la máquina en modo invisible (69 pruebas en total, 100% pasando).
 
 ## Estado actual del proyecto
 

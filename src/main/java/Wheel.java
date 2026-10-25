@@ -25,7 +25,8 @@ public class Wheel {
 
     /**
      * Vuelve a ajustar esta rueda a su vecina de la izquierda, si su tipo
-     * depende de ella. Por defecto no hace nada.
+     * depende de ella. La maquina la llama cuando la vecina cambia de simbolo
+     * o cuando la rueda queda junto a otra vecina. Por defecto no hace nada.
      *
      * @return true si la rueda cambio de simbolo.
      */

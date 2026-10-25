@@ -40,9 +40,21 @@ public class LeftyWheel extends Wheel {
         }
     }
 
+    /**
+     * Copia el simbolo de la vecina izquierda si cambio. Una rueda bloqueada
+     * no se mueve, y si ya muestra el mismo color no vuelve a seleccionarlo.
+     */
     @Override
     public boolean sync() {
-        return copyLeft();
+        Wheel neighbour = leftWheel();
+        if (isLocked() || neighbour == null) {
+            return false;
+        }
+        String color = neighbour.currentColor();
+        if (color == null || color.equals(currentColor())) {
+            return false;
+        }
+        return setCurrentByColor(color);
     }
 
     private boolean copyLeft() {

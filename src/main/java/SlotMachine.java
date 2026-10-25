@@ -77,8 +77,10 @@ public class SlotMachine {
             fail("El tipo de rueda indicado no existe.");
             return;
         }
-        wheels.add(toIndex(pos, wheels.size() + 1), w);
+        int index = toIndex(pos, wheels.size() + 1);
+        wheels.add(index, w);
         relink();
+        follow(index + 1);
         succeed();
     }
 
@@ -97,9 +99,11 @@ public class SlotMachine {
             return;
         }
 
+        int index = wheels.indexOf(w);
         w.hide();
         wheels.remove(w);
         relink();
+        follow(index);
         succeed();
     }
 
@@ -147,7 +151,11 @@ public class SlotMachine {
             return;
         }
 
+        boolean wasEmpty = w.isEmpty();
         w.addSymbol(w.size() + 1, type, color);
+        if (wasEmpty) {
+            followRightOf(w);
+        }
         succeed();
     }
 
@@ -163,10 +171,17 @@ public class SlotMachine {
                 return;
             }
         }
+        String[] before = configuration();
         boolean removed = false;
         for (Wheel w : wheels) {
             if (w.delSymbol(symbol)) {
                 removed = true;
+            }
+        }
+        for (int i = 0; i < wheels.size(); i++) {
+            String now = wheels.get(i).currentColor();
+            if (now != null && !now.equals(before[i])) {
+                follow(i + 1);
             }
         }
         if (removed) {
@@ -189,6 +204,7 @@ public class SlotMachine {
         }
 
         if (w.setCurrentByColor(symbol)) {
+            followRightOf(w);
             succeed();
         }
         else {
@@ -209,6 +225,7 @@ public class SlotMachine {
             return;
 
         w.spin();
+        followRightOf(w);
         succeed();
     }
 
@@ -441,6 +458,13 @@ public class SlotMachine {
         wheels.set(i1, second);
         wheels.set(i2, first);
         relink();
+        // las dos ruedas y las que quedan a su derecha estrenan vecina
+        int lo = Math.min(i1, i2);
+        int hi = Math.max(i1, i2);
+        follow(lo);
+        follow(lo + 1);
+        follow(hi);
+        follow(hi + 1);
         succeed();
     }
 
@@ -506,6 +530,7 @@ public class SlotMachine {
         int total = Math.abs(steps);
         for (int i = 0; i < total; i++) {
             w.rotate(direction);
+            followRightOf(w);
             if (visible) {
                 redraw();
                 Canvas.getCanvas().wait(STEP_DELAY);
@@ -589,13 +614,25 @@ public class SlotMachine {
     }
 
     /**
-     *  Recorre las ruedas de izquierda a derecha y deja que cada una se
-     *  ajuste a su vecina. Las que no dependen de la vecina no se mueven.
+     *  La rueda en la posicion from cambio de vecina o su vecina cambio de
+     *  simbolo: se reajusta y, mientras siga cambiando, la de su derecha
+     *  tambien. Asi una cadena de ruedas zurdas sigue a la primera.
+     *
+     *  @param from indice (desde 0) de la primera rueda que debe reajustarse
      */
-    private void follow() {
-        for (Wheel w : wheels) {
-            w.sync();
+    private void follow(int from) {
+        for (int k = Math.max(from, 0); k < wheels.size(); k++) {
+            if (!wheels.get(k).sync()) {
+                return;
+            }
         }
+    }
+
+    /**
+     *  Reajusta las ruedas que dependen de w porque w cambio de simbolo.
+     */
+    private void followRightOf(Wheel w) {
+        follow(wheels.indexOf(w) + 1);
     }
 
     /**
